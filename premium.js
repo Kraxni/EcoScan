@@ -95,17 +95,22 @@
     };
 
     if (!reduced() && 'IntersectionObserver' in window) {
+      /* Titres : les mots montent AVEC le défilement (CSS animation-timeline : fluide, et ça commence dès que le titre
+         apparaît en bas de l'écran). GSAP ne sert que de repli quand le navigateur ne sait pas faire. */
+      const cssScroll = CSS.supports('animation-timeline', 'view()');
       const io = new IntersectionObserver(entries => entries.forEach(e => {
         if (!e.isIntersecting) return;
         io.unobserve(e.target);
-        gsap.fromTo($$('.wi', e.target), { yPercent: 112 }, { yPercent: 0, duration: 0.9, ease: 'expo.out', stagger: 0.045, clearProps: 'transform' });
+        gsap.fromTo($$('.wi', e.target), { yPercent: 112 }, { yPercent: 0, duration: 0.7, ease: 'power4.out', stagger: 0.03, clearProps: 'transform' });
         e.target.classList.add('split-done');
-      }), { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+      }), { threshold: 0, rootMargin: '0px 0px -3% 0px' });
       /* Le découpage en mots se fait juste avant l'arrivée du titre (900 px d'avance), pas tout d'un coup au chargement. */
       const splitIO = new IntersectionObserver(entries => entries.forEach(e => {
         if (!e.isIntersecting) return;
         splitIO.unobserve(e.target);
-        splitWords(e.target); e.target.classList.add('split-ready'); io.observe(e.target);
+        const words = splitWords(e.target);
+        if (cssScroll) { words.forEach((w, i) => w.style.setProperty('--k', i)); e.target.classList.add('split-ready', 'split-css'); }
+        else { e.target.classList.add('split-ready'); io.observe(e.target); }
       }), { rootMargin: '0px 0px 900px 0px' });
       splitTargets.forEach(h => splitIO.observe(h));
 
