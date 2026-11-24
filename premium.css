@@ -471,9 +471,9 @@ main .story-head h2{max-width:18ch;margin-inline:auto}
 body{background:var(--bone)}
 .section.tint,main #station,main #qr-session,.research-section,.laboratory-section,.resource-hub{background:var(--bone-2)}
 main #architecture,main #demo,main #faisabilite,main #technologies,main #exploitation,main #engagements{background:var(--bone)}
-.section.dark,main #concept,main .launch-section,.future-manifesto,.manifesto,.video-section,footer{background:var(--night);background-image:url("./assets/leaves.svg");background-repeat:no-repeat;background-size:min(1100px,120vw) auto;background-position:right -120px bottom -160px}
-.story{background:var(--forest);background-image:url("./assets/leaves.svg");background-repeat:no-repeat;background-size:min(1000px,110vw) auto;background-position:left -160px top 120px}
-.mission{background:var(--moss);background-image:url("./assets/leaves.svg");background-repeat:no-repeat;background-size:min(1200px,130vw) auto;background-position:right -200px center}
+.section.dark,main #concept,main .launch-section,.future-manifesto,.manifesto,.video-section,footer{background:var(--night);background-image:url("./assets/leaves.svg?v=2");background-repeat:no-repeat;background-size:min(1100px,120vw) auto;background-position:right -120px bottom -160px}
+.story{background:var(--forest);background-image:url("./assets/leaves.svg?v=2");background-repeat:no-repeat;background-size:min(1000px,110vw) auto;background-position:left -160px top 120px}
+.mission{background:var(--moss);background-image:url("./assets/leaves.svg?v=2");background-repeat:no-repeat;background-size:min(1200px,130vw) auto;background-position:right -200px center}
 .participate{background:var(--signal);color:var(--night)}
 .marquee{background:var(--signal);color:var(--night)}
 .marquee-track{font-weight:650;letter-spacing:-.03em}
@@ -505,7 +505,7 @@ header nav a.current-section,#navigation [aria-current=page]{background:rgba(243
 .hero-link:hover,.text-button:hover{text-decoration:underline;text-underline-offset:5px}
 
 /* hero : une phrase, un produit, deux actions */
-.product-hero{display:flex;flex-direction:column;align-items:center;text-align:center;min-height:100svh;padding:clamp(96px,13vh,140px) var(--gutter) 0;gap:0;background:var(--night);background-image:url("./assets/leaves.svg");background-repeat:no-repeat;background-size:min(1300px,140vw) auto;background-position:center bottom -220px;overflow:hidden}
+.product-hero{display:flex;flex-direction:column;align-items:center;text-align:center;min-height:100svh;padding:clamp(96px,13vh,140px) var(--gutter) 0;gap:0;background:var(--night);background-image:url("./assets/leaves.svg?v=2");background-repeat:no-repeat;background-size:min(1300px,140vw) auto;background-position:center bottom -220px;overflow:hidden}
 .product-hero .hero-copy{max-width:980px;margin:0 auto}
 .product-hero .eyebrow{justify-content:center;color:var(--signal);font-size:.82rem;text-transform:uppercase;margin-bottom:1.2rem}
 .product-hero h1{font-size:clamp(2.9rem,8.4vw,7.4rem);font-weight:700;letter-spacing:-.05em;line-height:1;margin:0 0 .3em;color:#fff}
@@ -585,7 +585,7 @@ header nav a.current-section,header nav a[aria-current=page],#navigation .curren
 .product-hero h1{font-size:clamp(2.6rem,7vw,6.6rem)}
 .hero-actions{align-items:center!important}
 .hero-actions .hero-link{display:inline-flex;align-items:center;line-height:1}
-.product-hero{background-image:url("./assets/leaves.svg"),url("./assets/leaves.svg");background-repeat:no-repeat,no-repeat;background-size:min(900px,90vw) auto,min(700px,70vw) auto;background-position:right -260px top 40px,left -220px bottom 40px}
+.product-hero{background-image:url("./assets/leaves.svg?v=2"),url("./assets/leaves.svg?v=2");background-repeat:no-repeat,no-repeat;background-size:min(900px,90vw) auto,min(700px,70vw) auto;background-position:right -260px top 40px,left -220px bottom 40px}
 .hero-link{gap:.35em}
 .hero-link::after{content:"›";margin-left:0}
 .manifesto-text{font-size:clamp(1.8rem,3.7vw,3.3rem);max-width:26em;line-height:1.14}
@@ -602,7 +602,7 @@ header nav a.current-section,header nav a[aria-current=page],#navigation .curren
 :root{--page:#e6f0df;--ink:#0f2a1c;--muted:#456252;--tile:#ffffff;--leaf:#1a7f4b;--leaf-deep:#136a3d;--line:rgba(15,42,28,.16)}
 html,body{background:var(--page)}
 body{color:var(--ink)}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("./assets/leaves-light.svg") no-repeat right -180px bottom -120px/min(1100px,115vw) auto,url("./assets/leaves-light.svg") no-repeat left -260px top 60px/min(800px,90vw) auto}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("./assets/leaves-light.svg?v=2") no-repeat right -180px bottom -120px/min(1100px,115vw) auto,url("./assets/leaves-light.svg?v=2") no-repeat left -260px top 60px/min(800px,90vw) auto}
 main>section,main .section,.section.tint,.section.dark,.story,.manifesto,.mission,.video-section,.launch-section,.future-manifesto,.participate,.research-section,.laboratory-section,.resource-hub,.product-hero,main #station,main #qr-session,main #architecture,main #demo,main #faisabilite,main #technologies,main #exploitation,main #engagements,main #concept,main #video-explicative,main .launch-section,footer{background:transparent!important;background-image:none!important;color:var(--ink)}
 .marquee{background:transparent!important;border-block:1px solid var(--line);color:var(--leaf-deep)}
 .marquee-track{font-weight:650;color:var(--leaf-deep)}
