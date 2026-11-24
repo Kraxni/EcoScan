@@ -10,7 +10,7 @@ Aucune station réelle, reconnaissance IA, récompense commerciale ni partenaria
 
 ## Ouvrir et modifier le site
 
-Le site utilise **HTML, CSS et JavaScript natifs**, sans compilation, compte, clé API, framework ou abonnement. Ouvrez `index.html` dans un navigateur ou démarrez un serveur local :
+Le site utilise **HTML, CSS et JavaScript natifs**, sans framework, compte, clé API ou abonnement. Une seule étape facultative, en Python standard, assemble le CSS : `python3 tools/build_site.py` (voir ci-dessous). Ouvrez `index.html` dans un navigateur ou démarrez un serveur local :
 
 ```sh
 cd /workspace/EcoScan
@@ -23,6 +23,7 @@ Sur votre propre ordinateur, consultez `http://localhost:8000`. Dans Codex, le s
 | --- | --- |
 | `index.html` | Textes, sections, ancres, ordre du récit et liens |
 | `styles.css` | Styles des composants, responsive et animations |
+| `site.min.css` | **Fichier chargé par la page** : assemblage minifié de `styles.css`, `product.css`, `experience-*.css` et `premium.css`. À régénérer avec `python3 tools/build_site.py` après toute modification d'un CSS ; le script met aussi à jour les numéros de version des scripts dans `index.html` |
 | `product.css` | Direction visuelle précédente : hero, simulation, laboratoire, marque |
 | `premium.css` / `premium.js` | Direction artistique « matière vivante » (chargée en dernier) : typographie, hero, trajet interactif, transitions, mouvement |
 | `assets/fonts/`, `assets/vendor/` | Police Inter, feuillage SVG et bibliothèques GSAP, ScrollTrigger, Lenis hébergées localement |
@@ -34,6 +35,8 @@ Sur votre propre ordinateur, consultez `http://localhost:8000`. Dans Codex, le s
 | `docs/` | Faisabilité, recherche, références, stratégie et transcriptions |
 | `tools/` | Serveur local et générateurs hors ligne des médias |
 | `tests/` | Vérifications de navigateur, sans dépendance du site en production |
+
+**Modifier le style ou un script** : éditez le fichier source (par exemple `premium.css`), puis lancez `python3 tools/build_site.py` avant de publier. **Modifier un texte** : éditez seulement `index.html`, sans étape supplémentaire.
 
 Pour remplacer un texte, modifiez `index.html`. Pour ajouter une image, utilisez un chemin relatif `./assets/nom.webp`, un texte alternatif utile et les dimensions réelles. Les chemins relatifs garantissent le fonctionnement sous `/EcoScan/`.
 
@@ -58,6 +61,12 @@ Direction « innovation, version nature » (voir `DESIGN.md`) : un seul fond ver
 - Licences : GSAP (licence standard GreenSock, usage gratuit), Lenis (MIT), police Inter (SIL OFL 1.1). Les fichiers vendorisés sont dans `assets/vendor/` et `assets/fonts/`.
 
 Test dédié : `node tests/premium.cjs`.
+
+### Performance, accessibilité et référencement
+
+- Une seule feuille de style bloquante (`site.min.css`), l'image du hero préchargée en deux tailles, aucune animation sur l'image principale. Les sections sous la ligne de flottaison ne sont mises en page qu'à l'approche (`content-visibility`). Le travail JavaScript non essentiel (titres animés, parallaxe) attend un moment de repos du navigateur.
+- Accessibilité : contrastes AA, un titre `h1` (masqué) par parcours, zones tactiles de 44 px, `prefers-reduced-motion` respecté. Mesure locale : Lighthouse accessibilité 100.
+- Référencement : `robots.txt`, `sitemap.xml`, `manifest.webmanifest`, image de partage 1200×630 (`assets/og-ecoscan.jpg`), icônes PNG, données structurées `WebSite`.
 
 ## Parcours, app et boutique
 

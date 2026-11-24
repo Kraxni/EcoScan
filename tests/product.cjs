@@ -4,7 +4,7 @@ const base=process.env.ECOSCAN_TEST_URL||'http://127.0.0.1:8000';
 async function open(page,id){await page.evaluate(value=>{location.hash=value;},id);await page.locator('#'+id).waitFor({state:'visible'});await page.waitForTimeout(220);}
 (async()=>{const browser=await chromium.launch({headless:true,executablePath:'/usr/bin/chromium',args:['--no-sandbox']});try{
 const page=await browser.newPage({viewport:{width:1440,height:950},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base);
-assert.equal(await page.title(),'EcoScan — Un seul geste. Un nouveau cycle.');assert.equal(await page.locator('h1').count(),1);assert.match(await page.locator('h1').textContent(),/Un seul geste/);
+assert.equal(await page.title(),'EcoScan — Un seul geste. Un nouveau cycle.');assert.equal(await page.locator('h1:not(.sr-only)').count(),1);assert.match(await page.locator('#accueil h1').textContent(),/Un seul geste/);
 for(const id of ['promesse','mise-en-place','laboratoire','recherche','exploitation','preuves','sources'])assert.equal(await page.locator('#'+id).count(),1);
 await open(page,'laboratoire');for(const key of ['sorting','flow','session','impact']){
  await page.locator(`[data-protocol=${key}]`).click();assert.equal(await page.locator(`[data-protocol=${key}]`).getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#protocol-steps li').count(),5);assert.ok((await page.locator('#protocol-limit').textContent()).startsWith('Limite :'));
