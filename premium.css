@@ -17,10 +17,9 @@
 
 /* ───────────── Base ───────────── */
 html{background:var(--page);scroll-behavior:auto;scroll-padding-top:calc(var(--header-h) + 24px);-webkit-text-size-adjust:100%}
-.lenis.lenis-smooth{scroll-behavior:auto}
-.lenis.lenis-stopped{overflow:hidden}
 body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:1.125rem;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("./assets/leaves-light.svg") no-repeat right -180px bottom -120px/min(1100px,115vw) auto,url("./assets/leaves-light.svg") no-repeat left -260px top 60px/min(800px,90vw) auto}
+/* Feuillage : fond de page qui défile avec le contenu (haut et bas de page), jamais un calque fixe plein écran */
+body{background-image:url("./assets/leaves-light.svg"),url("./assets/leaves-light.svg");background-repeat:no-repeat,no-repeat;background-size:min(1100px,115vw) auto,min(800px,90vw) auto;background-position:right -180px top 140px,left -260px bottom 40px}
 ::selection{background:var(--signal);color:var(--night)}
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .hide-sm{display:inline}
@@ -58,7 +57,7 @@ em{font-style:normal;font-weight:inherit;color:var(--leaf)}
 
 /* ───────────── En-tête ───────────── */
 #reading-progress{height:3px;background:var(--leaf);z-index:60}
-header{position:fixed;top:0;left:0;width:100%;height:var(--header-h);padding:0 var(--gutter);display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:50;background:rgba(238,246,232,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border:0;border-bottom:1px solid var(--line);color:var(--ink);transition:background .3s}
+header{position:fixed;top:0;left:0;width:100%;height:var(--header-h);padding:0 var(--gutter);display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:50;background:#eef6e8;border:0;border-bottom:1px solid var(--line);color:var(--ink);transition:background .3s}
 header.is-scrolled{background:rgba(238,246,232,.94)}
 .product-brand{display:inline-flex;align-items:center;min-height:44px}
 .product-brand img{width:132px;height:auto;display:block}
@@ -89,7 +88,7 @@ header nav a:hover{background:rgba(15,42,28,.08)}
 .hero-actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 28px;margin-top:1.8rem}
 .hero-caption{margin:1.1rem auto 0;max-width:52ch;font-size:.82rem;color:var(--muted)}
 .hero-product{width:min(1040px,100%);margin:clamp(24px,3.5vw,48px) auto 0;perspective:1400px}
-.hero-product-frame{border-radius:28px 28px 0 0;border:1px solid var(--line);border-bottom:0;background:#fff;overflow:hidden;will-change:transform}
+.hero-product-frame{border-radius:28px 28px 0 0;border:1px solid var(--line);border-bottom:0;background:#fff;overflow:hidden}
 .hero-product-frame img{display:block;width:100%;height:auto}
 .hero-product figcaption{margin:0;padding:10px 0 14px;font-size:.8rem;color:var(--muted)}
 .planet-scene{display:none}
@@ -264,7 +263,6 @@ footer{background:transparent;color:var(--ink);padding:clamp(80px,11vw,160px) va
 @media(min-width:861px){.header-cta{display:inline-flex}}
 @media(max-width:1000px){.story-stage{grid-template-columns:1fr;gap:20px}}
 @media(max-width:860px){
-  header{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(238,246,232,.98)}
   .story-pin{justify-content:flex-start;padding-top:64px}
   .story-stage{display:flex;flex-direction:column-reverse;gap:10px}
   .story-visual svg{max-height:36svh}
@@ -297,7 +295,7 @@ footer{background:transparent;color:var(--ink);padding:clamp(80px,11vw,160px) va
   .split-ready:not(.split-done) .wi{transform:none}
   .curtain{display:none}
 }
-@media print{header,.curtain,.marquee,body::before{display:none}}
+@media print{header,.curtain,.marquee{display:none}}
 
 /* ───────────── Zones de toucher ≥ 44 px et lisibilité des étapes héritées ───────────── */
 .launch-section b,.launch-section .number{color:var(--leaf)}
@@ -307,11 +305,7 @@ details>summary{display:flex;align-items:center;min-height:44px}
 .manifesto-note a,p>a{padding-block:.5rem}
 input[type=range]{min-height:44px}
 .offline-label{display:flex;align-items:center;gap:10px;min-height:44px}
-input[type=range]{height:44px}
-
-/* Les sections sous la ligne de flottaison ne sont mises en page qu'à l'approche : premier affichage plus léger */
-main>section.section:not(#trajet):not(#probleme):not(.next-step){content-visibility:auto;contain-intrinsic-size:auto 900px}
-header nav{order:2}
+input[type=range]{height:44px}header nav{order:2}
 .header-cta{order:3;margin-left:6px}
 .menu-button{order:4}
 @media(max-width:700px){
@@ -323,3 +317,13 @@ header nav{order:2}
 }
 .product-hero .hero-copy>.eyebrow{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;text-align:center}
 .faq-list{max-width:900px;margin-inline:auto}
+
+/* ───────────── Illustrations (générées par IA, légères, chargées à la demande) ───────────── */
+.section-figure{margin:clamp(24px,4vw,48px) auto;max-width:880px}
+.section-figure img{display:block;width:100%;height:auto;border-radius:var(--r);background:#dcead5}
+.section-figure-square{max-width:380px}
+.section-figure figcaption,.campus-illustration figcaption{margin:10px 4px 0;font-size:.8rem;color:var(--muted);text-align:center}
+.campus-art.campus-illustration{background:none;color:var(--ink);overflow:visible;border-radius:0;padding:0;margin:0}
+.campus-art.campus-illustration::after,.campus-art.campus-illustration::before{display:none}
+.campus-art.campus-illustration img{display:block;width:100%;height:auto;border-radius:var(--r)}
+main .split>div>.eyebrow{text-align:left;margin-left:0}

@@ -1,6 +1,6 @@
 'use strict';
 /*
- * Couche de mouvement d'EcoScan : défilement fluide (Lenis), récit au défilement (GSAP + ScrollTrigger),
+ * Couche de mouvement d'EcoScan : récit au défilement (GSAP + ScrollTrigger),
  * boutons magnétiques, transitions entre parcours. Tout se dégrade proprement : sans JavaScript,
  * avec « réduire les animations » ou si les bibliothèques ne se chargent pas, le contenu reste lisible.
  * Le travail non essentiel est reporté à un moment de repos du navigateur pour protéger le premier affichage.
@@ -23,15 +23,8 @@
   if (!reduced()) root.classList.add('fx');
 
   /* ───────────── Défilement fluide (pointeur fin uniquement : le tactile reste natif) ───────────── */
-  let lenis = null;
-  if (!reduced() && finePointer && typeof Lenis !== 'undefined') {
-    lenis = new Lenis({ lerp: 0.095, wheelMultiplier: 0.95, smoothWheel: true, anchors: false });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(t => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
-    root.classList.add('ecoscan-smooth');
-  }
-  const scrollToY = y => (lenis ? lenis.scrollTo(y, { duration: 1.1, easing: t => 1 - Math.pow(1 - t, 4) }) : scrollTo({ top: y, behavior: reduced() ? 'auto' : 'smooth' }));
+  /* Le défilement reste natif : le navigateur gère l'inertie bien mieux qu'une surcouche (Safari en particulier). */
+  const scrollToY = y => scrollTo({ top: y, behavior: reduced() ? 'auto' : 'smooth' });
 
   /* ───────────── En-tête : fond renforcé après un peu de défilement ───────────── */
   const header = $('header');
@@ -123,14 +116,6 @@
       manifesto.classList.add('scrub-ready');
       gsap.set(words, { opacity: 0.55 });
       gsap.to(words, { opacity: 1, ease: 'none', stagger: 0.5, scrollTrigger: { trigger: manifesto, start: 'top 82%', end: 'bottom 48%', scrub: 0.6 } });
-    }
-
-    if (!reduced()) {
-      $$('.model-view').forEach(el => {
-        const host = el.closest('.machine-shell') || el.parentElement;
-        gsap.fromTo(el, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: host, start: 'top bottom', end: 'bottom top', scrub: true } });
-      });
-      if (hero) gsap.to('.hero-copy', { yPercent: -8, opacity: 0.3, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
     }
 
     /* Pointeur fin : produit incliné en 3D, boutons magnétiques */
