@@ -47,14 +47,7 @@
   scrollTasks.push(() => { const s = scrollY > 24; if (s !== scrolledState) { scrolledState = s; header?.classList.toggle('is-scrolled', s); } });
   header?.classList.toggle('is-scrolled', scrollY > 24);
 
-  /* ───────────── Arrivée du hero : texte seulement. L'image (LCP) n'est jamais masquée. ───────────── */
   const hero = $('#accueil');
-  if (hero && !reduced()) {
-    gsap.timeline({ defaults: { ease: 'expo.out' } })
-      .from('.h1-line > span', { yPercent: 115, duration: 1.1, stagger: 0.08 }, 0)
-      .from('.hero-copy .eyebrow, .hero-description, .hero-caption', { y: 18, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.25)
-      .from('.hero-actions > *', { opacity: 0, duration: 0.8, stagger: 0.06 }, 0.4);
-  }
 
   /* ───────────── Rideau de transition entre parcours ───────────── */
   const curtain = document.createElement('div');

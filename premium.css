@@ -359,3 +359,93 @@ main .section>.button,main .section>a.button{display:flex;width:fit-content;marg
 /* règles d'interface : pas de délai au toucher, défilement contenu dans les fenêtres */
 a,button,summary,select,label,input,[role=button]{touch-action:manipulation}
 dialog,.eco-shop-dialog{overscroll-behavior:contain}
+
+/* ═════ Entrée du hero en CSS pur : démarre au premier affichage, sans attendre le JavaScript, sans clignotement ═════ */
+@keyframes rise{from{transform:translateY(115%)}to{transform:none}}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+  .h1-line>span{animation:rise 1s var(--ease) both}
+  .h1-line:nth-of-type(2)>span{animation-delay:.07s}
+  .h1-line:nth-of-type(3)>span{animation-delay:.14s}
+  .h1-line:nth-of-type(4)>span{animation-delay:.21s}
+  .product-hero .hero-copy>.eyebrow,.product-hero .hero-description,.product-hero .hero-actions,.product-hero .hero-caption{animation:fade-up .8s var(--ease) both;animation-delay:.2s}
+  .product-hero .hero-actions{animation-delay:.32s}
+}
+
+/* ═════ Sections plus courtes ═════ */
+#video-explicative,#faisabilite{padding-block:clamp(56px,7vw,100px)}
+@media(min-width:1000px){.roadmap{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}.roadmap li{margin:0}}
+
+/* ═════ Des grilles qui ne se ressemblent plus ═════ */
+/* promesse : une liste éditoriale, pas des cartes */
+.promise-grid{display:block}
+.promise-grid>article{display:grid;grid-template-columns:minmax(9rem,.5fr) 1.1fr 2fr;gap:clamp(12px,3vw,48px);align-items:baseline;background:transparent;border-radius:0;border-top:1px solid var(--line);padding:26px 0;transform:none}
+.promise-grid>article:last-child{border-bottom:1px solid var(--line)}
+.promise-grid>article:hover{transform:none}
+.promise-grid>article>span{margin:0}
+.promise-grid>article h3{margin:0;font-size:clamp(1.3rem,2vw,1.8rem)}
+.promise-grid>article p{margin:0;font-size:1.05rem}
+@media(max-width:800px){.promise-grid>article{grid-template-columns:1fr;gap:8px}}
+/* concept : trois étapes reliées par un filet vert */
+#concept .grid.three>article{background:transparent;border-radius:0;border-top:4px solid var(--leaf);padding:22px 4px 0}
+/* architecture : un grand panneau sombre et deux cartes */
+#architecture .grid.three{grid-template-columns:1.25fr 1fr}
+#architecture .grid.three>article:first-child{grid-row:span 2;background:var(--night);color:#f3f7f0;padding:clamp(28px,3.4vw,52px)}
+#architecture .grid.three>article:first-child h3{color:#fff;font-size:clamp(1.5rem,2.4vw,2.2rem)}
+#architecture .grid.three>article:first-child p{color:rgba(243,247,240,.82);font-size:1.1rem}
+@media(max-width:800px){#architecture .grid.three{grid-template-columns:1fr}#architecture .grid.three>article:first-child{grid-row:auto}}
+/* technologies : colonnes séparées par un filet */
+#technologies .grid.three>article{background:transparent;border-radius:0;border-left:1px solid var(--line);padding:4px 0 4px 24px}
+@media(max-width:800px){#technologies .grid.three>article{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}}
+/* plan technique : trois repères numérotés */
+#plan-technique .grid.three{counter-reset:etape}
+#plan-technique .grid.three>article{counter-increment:etape;background:transparent;border-radius:0;border-top:2px solid var(--leaf);padding:18px 4px 0}
+#plan-technique .grid.three>article::before{content:counter(etape);display:block;margin-bottom:8px;font-size:2.4rem;font-weight:700;line-height:1;color:var(--leaf)}
+/* plan technique : schéma à gauche, explication à droite (moitié moins haut) */
+@media(min-width:1000px){
+  .blueprint-card{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:0 clamp(24px,3vw,48px);align-items:start}
+  .blueprint-card>img{grid-column:1;grid-row:1 / span 3}
+  .blueprint-card>h3,.blueprint-card>p,.blueprint-card>.blueprint-actions{grid-column:2}
+}
+
+/* ═════ Composants hérités redessinés : démo, étapes, machine, tableau de bord ═════ */
+.demo-card select,.station-console select{min-height:48px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:inherit}
+.object-tray{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.object-token{display:grid;justify-items:center;gap:6px;padding:14px 6px 10px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:.85rem;min-height:92px;transition:border-color .25s,transform .25s var(--ease)}
+.object-token:hover{border-color:var(--leaf);transform:translateY(-2px)}
+.object-token[aria-pressed=true]{background:var(--night);color:#fff;border-color:var(--night)}
+@media(max-width:520px){.object-tray{grid-template-columns:repeat(2,1fr)}}
+/* étapes : une frise, pas des pastilles */
+.demo-steps{display:flex;gap:8px;flex-wrap:nowrap;margin:22px 0;padding:0;list-style:none}
+.demo-steps li{flex:1;padding:10px 4px 0;border-radius:0;background:transparent;border-top:3px solid var(--line);color:var(--muted);font-size:.8rem;font-weight:600}
+.demo-steps li.active{background:transparent;border-top-color:var(--leaf);color:var(--ink)}
+.lab-progress{grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0}
+.lab-progress li{padding:10px 4px 0;border:0;border-top:3px solid var(--line);border-radius:0;background:transparent;color:var(--muted);font-size:.78rem;font-weight:600;box-shadow:none}
+.lab-progress li.active{background:transparent;border-top-color:var(--leaf);color:var(--ink);box-shadow:none}
+@media(max-width:520px){.lab-progress{grid-template-columns:repeat(2,1fr)}}
+/* la machine : sombre, comme la station du film */
+.demo-card .drop-zone{background:var(--night);border:2px dashed rgba(111,224,160,.5);box-shadow:none;color:#f3f7f0;padding:28px 20px;border-radius:var(--r)}
+.demo-card .drop-zone.dragging{outline:0;border-style:solid;border-color:var(--signal);box-shadow:0 0 0 5px rgba(111,224,160,.22)}
+.drop-zone .demo-machine-label strong{color:#fff}
+.drop-zone .demo-machine-label small,.drop-zone>small{color:rgba(243,247,240,.72)}
+.drop-zone .demo-inlet{background:#06170f;border:2px solid rgba(111,224,160,.55);border-radius:999px;box-shadow:none;min-height:92px;color:var(--signal)}
+.drop-zone .demo-inlet small{color:rgba(243,247,240,.75)}
+.drop-zone .demo-machine-rule{background:rgba(243,247,240,.18)}
+/* aperçu des plaques et destinations */
+.route-visual{background:transparent;border:1px solid var(--line);border-radius:var(--r)}
+.route-destinations>span{border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-weight:600}
+.route-destinations>span.routed{background:var(--leaf);border-color:var(--leaf);color:#fff;box-shadow:none}
+/* liens d'action de la démo : de vrais boutons secondaires */
+#new-item,#restart-demo{display:inline-flex;align-items:center;margin:6px 8px 0 0;padding:0 20px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);text-decoration:none}
+#new-item:hover,#restart-demo:hover{border-color:var(--leaf);text-decoration:none}
+/* le téléphone reste visible pendant le défilement de la démo (bureau) */
+@media(min-width:1000px){.demo-layout{align-items:start}#phone-wallet{position:sticky;top:calc(var(--header-h) + 20px)}}
+/* tableau de bord fictif : des tuiles lisibles */
+.dashboard-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.dashboard-summary span{padding:14px;border-radius:14px;background:var(--page);font-size:.82rem;color:var(--muted)}
+.dashboard-summary b{display:block;margin-top:4px;font-size:1.25rem;color:var(--ink)}
+.demo-intro .button,#guided-action{background:var(--leaf);color:#fff}
+#quiz>p{text-align:center;margin-inline:auto;color:var(--muted)}
+#quiz .quiz-card{margin-inline:auto}
+.dashboard-summary{grid-template-columns:repeat(4,1fr)}
+@media(max-width:700px){.dashboard-summary{grid-template-columns:repeat(2,1fr)}}

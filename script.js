@@ -376,7 +376,8 @@ function queueMeasure() {
 addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateReadingProgress);}},{passive:true});
 addEventListener('resize',queueMeasure);
 if('ResizeObserver' in window)new ResizeObserver(queueMeasure).observe(document.body);
-measureProgress();updateReadingProgress();
+// Le ResizeObserver mesure après la première mise en page ; une lecture forcée ici retarderait le premier affichage.
+if(!('ResizeObserver' in window)){measureProgress();updateReadingProgress();}
 
 // Active chapter follows both chapter buttons and the native playback controls.
 function updateActiveChapter() {
