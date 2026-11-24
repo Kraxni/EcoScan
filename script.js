@@ -327,8 +327,8 @@ document.querySelectorAll('[data-video-time]').forEach(button=>button.addEventLi
 explainer.addEventListener('error',()=>{$('video-status').textContent='La lecture est indisponible. Téléchargez la vidéo ou consultez la transcription.';});
 // Change the narration while preserving the position and the visitor's playback choice.
 const filmLanguages={
-  en:{source:'econova-film-v2-en.mp4',label:'Voix anglaise · sous-titres français.',tracks:[{source:'econova-film-v2-en-fr.vtt',language:'fr',label:'Français — traduction',kind:'subtitles'},{source:'econova-film-v2-en.vtt',language:'en',label:'English',kind:'captions'}]},
-  fr:{source:'econova-film-v2.mp4',label:'Voix française · sous-titres français.',tracks:[{source:'econova-film-v2-fr.vtt',language:'fr',label:'Français',kind:'captions'}]}
+  en:{source:'econova-film-v3-en.mp4',label:'Voix anglaise · sous-titres français.',tracks:[{source:'econova-film-v2-en-fr.vtt',language:'fr',label:'Français — traduction',kind:'subtitles'},{source:'econova-film-v2-en.vtt',language:'en',label:'English',kind:'captions'}]},
+  fr:{source:'econova-film-v3-fr.mp4',label:'Voix française · sous-titres français.',tracks:[{source:'econova-film-v2-fr.vtt',language:'fr',label:'Français',kind:'captions'}]}
 };
 let filmLanguage='en',resumeAfterLanguageChange=false;
 function resumeSelectedFilm() {

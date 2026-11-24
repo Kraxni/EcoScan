@@ -66,6 +66,12 @@ Test dédié : `node tests/premium.cjs`.
 
 Quatre illustrations (`assets/illustrations/`, 4 à 23 Ko chacune, WebP, chargement différé) ont été générées par IA avec le modèle gratuit Z Image de Higgsfield, au coût de 0,15 crédit chacune, sans abonnement. Elles sont légendées comme telles sur le site : ce sont des concepts visuels, pas des photographies ni des lieux réels.
 
+### Film explicatif v3 (animation 1080p)
+
+Le film affiché sur le site est `assets/econova-film-v3-fr.mp4` / `econova-film-v3-en.mp4` (92 s, 1920×1080, 30 i/s, environ 5 Mo chacun). C'est une animation de principe en motion design, construite à partir de la même scène que « Suivez un objet » : un objet traverse la connexion, le dépôt unique, la séparation, l'identification, l'aiguillage et la confirmation. Les textes à l'écran sont dans la langue de la voix. La voix et la musique sont celles du film v2 (aucune nouvelle synthèse). Aucune performance n'est chiffrée ; le bandeau « film de concept » reste affiché en permanence.
+
+Pour le régénérer (Playwright, ffmpeg, rien de payant) : `./tools/build_film_v3.sh`. La scène est dans `tools/film_v3/scene.html` (textes, chronologie, caméra), le moteur de rendu dans `tools/render_film_v3.cjs`. Les films v2 (rendu 3D Blender) restent dans `assets/` mais ne sont plus affichés.
+
 ### Performance, accessibilité et référencement
 
 - Une seule feuille de style bloquante (`site.min.css`), l'image du hero préchargée en deux tailles, aucune animation sur l'image principale. Les sections sous la ligne de flottaison ne sont mises en page qu'à l'approche (`content-visibility`). Le travail JavaScript non essentiel (titres animés, parallaxe) attend un moment de repos du navigateur.
