@@ -64,8 +64,15 @@ h2{font-size:1.0625rem;line-height:1.3;font-weight:650;letter-spacing:-.01em}
 .tip .ico{color:var(--leaf)}
 
 /* Scanner */
-.viewfinder{border-radius:28px;background:var(--night);aspect-ratio:1;width:100%;overflow:hidden}
+.viewfinder{position:relative;border-radius:28px;background:var(--night);aspect-ratio:1;width:100%;overflow:hidden}
 .viewfinder svg{display:block;width:100%;height:100%}
+.viewfinder video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.viewfinder.cam svg{position:absolute;inset:0}
+.viewfinder.cam .art{display:none}
+.mode{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding-top:4px}
+.live-note{padding:14px 16px;border-radius:16px;background:var(--page-soft);border:1px solid var(--line);font-size:.9375rem;color:var(--ink)}
+#api-dialog label{font-size:.875rem;font-weight:650;margin-top:6px}
+#api-dialog input{min-height:48px;padding:10px 16px;border:1.5px solid var(--line);border-radius:14px;background:var(--page-soft);font-size:1rem}
 #manual{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:20px;background:var(--surface)}
 #manual label{font-size:.875rem;font-weight:650}
 #manual input{min-height:48px;padding:10px 16px;border:1.5px solid var(--line);border-radius:14px;background:var(--page-soft);font-size:1rem;letter-spacing:.04em;text-transform:uppercase}

@@ -145,6 +145,8 @@ node tests/shop.cjs
 node tests/ergonomics.cjs
 node tests/premium.cjs
 node tests/app.cjs
+node tests/server.cjs
+node tests/live.cjs
 ```
 
 Pour vérifier le chemin de publication, servir le parent du dépôt puis cibler `/EcoScan` :
@@ -171,4 +173,10 @@ Version installable (PWA) de l'app envisagée, servie par le même hébergement 
 Tout est simulé, comme sur le site : pas de caméra (le scan est une illustration), pas de compte, pas de serveur, aucun point réel. Écrans : Accueil, Station (scanner, session, dépôt, résultat), Portefeuille, Boutique (trois concepts, échanges fictifs), Apprendre (quiz). Règles identiques à la démonstration du site : 10 points par objet reconnu, 30 pour un mélange, rien si le doute persiste, dépôt bloqué si un compartiment simulé est plein. Le solde est enregistré sous la même clé (`ecoscan-demo-points`) que le site, donc partagé sur le même appareil.
 
 Maquette : fichier Figma « EcoScan » (variables de couleur, composants, 7 écrans de 390 x 844). Code : `app/index.html`, `app/app.css`, `app/app.js`, `app/data.js` (textes repris du site), `app/manifest.webmanifest`, `app/sw.js`. Test : `node tests/app.cjs`.
+
+### Mode connecté : si la poubelle existait
+
+L'app peut parler à un serveur EcoScan (onglet Station, « Connexion à une station… ») : lecture réelle du QR code par la caméra (ou en ouvrant le QR avec l'appareil photo du téléphone), session ouverte sur la station, dépôts détectés et confirmés par la station en direct, points crédités une seule fois par le serveur, échanges enregistrés. Sans adresse de serveur, l'app reste en démonstration, et rien n'est présenté comme réel.
+
+Aucune station n'est construite : le serveur de référence (`server/`) et le simulateur de station (`tools/station_simulator.js`) fournissent tout le côté logiciel et le contrat que devra respecter le futur contrôleur. Tout est décrit dans [`docs/operational-architecture.md`](docs/operational-architecture.md) : protocole, sécurité (requêtes de la station signées, crédit idempotent, plafond journalier), pannes prévues, ce qui reste à construire, à héberger et à valider. Étiquette QR d'une station : `python3 tools/make_station_qr.py ECO-001`.
 
