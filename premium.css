@@ -322,3 +322,4 @@ header nav{order:2}
   .product-hero .hero-copy>.hero-caption{margin-top:1rem}
 }
 .product-hero .hero-copy>.eyebrow{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;text-align:center}
+.faq-list{max-width:900px;margin-inline:auto}
