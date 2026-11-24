@@ -508,3 +508,70 @@ dialog,.eco-shop-dialog{overscroll-behavior:contain}
 #architecture .grid.three>article:first-child h3{font-size:clamp(1.8rem,3vw,2.8rem);margin-bottom:.5em}
 #architecture .grid.three>article:first-child p{font-size:clamp(1.1rem,1.4vw,1.3rem);line-height:1.6}
 @media(min-width:1000px){.blueprint-card{align-items:center}}
+
+/* ───────────── Plus horizontal : texte et image côte à côte, cartes en rangée, moins de pile verticale ───────────── */
+@media(min-width:1100px){
+/* sections « station » : bandeau texte | image, en alternant les côtés */
+#promesse,#architecture,#technologies,#concept,#fonctionnement,#exploitation{display:grid;column-gap:clamp(40px,6vw,110px);align-items:center}
+#promesse,#architecture,#technologies{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}
+#concept,#fonctionnement,#exploitation{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr)}
+#promesse>*,#architecture>*,#technologies>*,#concept>*,#fonctionnement>*,#exploitation>*{grid-column:1/-1}
+#promesse>h2,#architecture>h2,#technologies>h2,#concept>h2,#fonctionnement>h2,#exploitation>h2{grid-row:1;text-align:left;margin:0 0 .35em;max-width:none;align-self:end;font-size:clamp(2.1rem,3.5vw,3.3rem)}
+#promesse>.lead,#architecture>.lead,#concept>.lead,#exploitation>.lead{grid-row:2;text-align:left;margin:0;max-width:46ch;align-self:start}
+#promesse>h2,#promesse>.lead,#architecture>h2,#architecture>.lead,#technologies>h2{grid-column:1}
+#concept>h2,#concept>.lead,#fonctionnement>h2,#exploitation>h2,#exploitation>.lead{grid-column:2}
+#promesse>.station-figure,#architecture>.station-figure,#technologies>.station-figure{grid-column:2;grid-row:1/span 2}
+#concept>.station-figure,#fonctionnement>.station-figure,#exploitation>.station-figure{grid-column:1;grid-row:1/span 2}
+#promesse>.station-figure,#architecture>.station-figure,#technologies>.station-figure,#concept>.station-figure,#fonctionnement>.station-figure,#exploitation>.station-figure{margin:0;width:100%;max-width:480px;justify-self:center;align-self:center}
+/* quand le texte est plus haut que l'image, elle reste en vue pendant la lecture */
+#fonctionnement>.station-figure,#technologies>.station-figure{align-self:start;position:sticky;top:max(calc(var(--header-h) + 28px),calc(50vh - 250px))}
+#fonctionnement .roadmap li{padding-block:20px 16px}
+#fonctionnement .roadmap li p{margin-bottom:0}
+/* le contenu qui suit : pleine largeur, ou dans la colonne de texte quand il n'y a pas de chapô */
+#fonctionnement>.roadmap{grid-column:2;grid-row:2;grid-template-columns:1fr;gap:10px;margin:18px 0 0}
+#fonctionnement>.button{grid-column:2;grid-row:3;justify-self:start;margin-top:18px}
+#fonctionnement>.station-figure{grid-row:1/span 3}
+#technologies>.grid.three{grid-column:1;grid-row:2;grid-template-columns:1fr;gap:12px;margin:18px 0 0;align-self:start}
+/* architecture : le panneau sombre et deux cartes sur une même rangée */
+#architecture .grid.three{grid-template-columns:1.2fr 1fr 1fr;align-items:stretch}
+#architecture .grid.three>article:first-child{grid-row:auto;padding:clamp(24px,2.6vw,36px);justify-content:flex-start}
+#architecture .grid.three>article:first-child h3{font-size:clamp(1.5rem,2vw,1.9rem)}
+#architecture .grid.three>article:first-child p{font-size:1.05rem;line-height:1.55}
+/* concept : le bouton sous les trois étapes */
+#concept>.button{justify-self:center}
+
+/* film : titre en haut, lecteur et narration à gauche, liste des chapitres à droite */
+.video-section{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(250px,1fr);column-gap:clamp(24px,3vw,48px);align-items:start}
+.video-section>*{grid-column:1/-1}
+.video-section>.video-frame{grid-column:1;grid-row:3}
+.video-section>.film-language{grid-column:1;grid-row:4;margin:16px 0 0}
+.video-section>#video-description{grid-column:1;grid-row:5}
+.video-section>#video-status{grid-column:1;grid-row:6}
+.video-section>.video-chapters{grid-column:2;grid-row:3/span 4;margin:0;display:grid;gap:8px;align-content:start}
+.video-section>.video-chapters button{justify-content:flex-start;text-align:left;width:100%}
+.video-section>.video-downloads{grid-column:1/-1;grid-row:7}
+
+/* vue en coupe : réglages à gauche, modèle à droite (il reste visible pendant la lecture des repères) */
+.station-section{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:clamp(32px,4vw,64px);align-items:start}
+.station-section>*{grid-column:1/-1}
+main .station-section>h2{grid-column:1;grid-row:1;text-align:left;margin:0 0 .35em;max-width:none;font-size:clamp(2rem,3.2vw,3rem)}
+main .station-section>.lead{grid-column:1;grid-row:2;text-align:left;margin:0 0 .6rem;max-width:none;font-size:1.05rem}
+.station-section>.blueprint-controls{grid-column:1;grid-row:3;margin:14px 0 8px}
+.station-section>#blueprint-caption{grid-column:1;grid-row:4;margin:0}
+.station-section>.blueprint-details{grid-column:1;grid-row:5;margin:18px 0 8px}
+.station-section>#blueprint-detail{grid-column:1;grid-row:6;margin:0}
+.station-section>.station-design{grid-column:2;grid-row:1/span 6;margin:0;position:sticky;top:calc(var(--header-h) + 20px)}
+
+/* plan de principe : les deux remarques sur une même ligne */
+#plan-technique{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+#plan-technique>*{grid-column:1/-1}
+#plan-technique>.performance-note{grid-column:1;margin:28px 0 0}
+#plan-technique>.note{grid-column:2;margin:28px 0 0;align-self:start}
+
+/* boutique : visuels un peu moins hauts ; questions de faisabilité sur deux colonnes */
+.eco-shop-art{aspect-ratio:5/4}
+.note-box ul{columns:2;column-gap:48px}
+.note-box ul li{break-inside:avoid}
+/* atelier de dimensionnement : le résultat remplit sa colonne */
+.feasibility-lab .capacity-result{align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+}

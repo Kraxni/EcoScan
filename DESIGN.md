@@ -35,3 +35,8 @@ Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteu
 - L'entrée de page s'estompe quand on la quitte ; les mots des titres montent à l'arrivée du titre (GSAP, découpage fait juste avant l'affichage).
 - Sans prise en charge de `animation-timeline`, avec « réduire les animations » ou à l'impression, tout reste statique et lisible.
 - Un élément à `overflow: hidden` devient un conteneur de défilement et casse la chronologie : utiliser `overflow: clip` sur les ancêtres d'éléments animés.
+
+## Mise en page horizontale (écrans de 1100 px et plus)
+
+Moins de pile verticale : texte et image côte à côte, en alternant les côtés (promesse, concept, architecture, fonctionnement, technologies, exploitation), film et vue en coupe installés à côté de leurs réglages, cartes en rangée (le panneau sombre de l'architecture et ses deux cartes), l'image de la station reste en vue pendant la lecture des étapes (sticky). En dessous de 1100 px, tout s'empile comme avant.
+
