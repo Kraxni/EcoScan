@@ -77,7 +77,7 @@
 
   /* ───────────── Le reste, au repos du navigateur ───────────── */
   idle(() => {
-    const splitTargets = $$('#promesse h2, #station h2, #video-explicative h2, #trajet h2, #demo h2, #mission h2, #vision-monde h2, #impact h2, #participer h2');
+    const splitTargets = $$('#trajet h2, #mission h2, #participer h2');
     const splitWords = el => {
       if (el.dataset.split) return $$('.wi', el);
       el.dataset.split = '1';

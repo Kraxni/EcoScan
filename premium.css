@@ -29,8 +29,7 @@ a{text-decoration-thickness:1px;text-underline-offset:5px}
 a:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--amber);outline-offset:4px;border-radius:6px}
 
 /* ───────────── Typographie ───────────── */
-h1,h2,h3,.footer-big,.manifesto-text,.metrics strong,.story-steps strong,.marquee-track,.curtain-label,.sg-tagtext,.sg-points,.roadmap li::before,.faq-list summary{font-family:var(--sans);font-variation-settings:normal;font-style:normal}
-h1,h2{font-weight:650;letter-spacing:-.035em;line-height:1.04}
+h1,h2,h3,.footer-big,.manifesto-text,.metrics strong,.story-steps strong,h1,h2{font-weight:650;letter-spacing:-.035em;line-height:1.04}
 h2{font-size:clamp(2.2rem,5.2vw,4.6rem);margin-bottom:.45em}
 h3{font-weight:600;letter-spacing:-.02em;line-height:1.2;font-size:clamp(1.2rem,1.6vw,1.45rem)}
 em{font-style:normal;font-weight:inherit;color:var(--leaf)}
@@ -94,12 +93,6 @@ header nav a:hover{background:rgba(15,42,28,.08)}
 .planet-scene{display:none}
 .planet{animation:none}
 
-/* ───────────── Bandeau défilant ───────────── */
-.marquee{overflow:hidden;padding:18px 0;border-block:1px solid var(--line);color:var(--leaf-deep)}
-.marquee-track{display:flex;width:max-content;gap:34px;align-items:center;animation:marquee 38s linear infinite;font-size:clamp(1.5rem,3vw,2.6rem);font-weight:650;letter-spacing:-.03em;white-space:nowrap;padding-left:34px}
-.marquee.is-paused .marquee-track{animation-play-state:paused}
-.marquee-track i{font-style:normal;font-size:1rem;opacity:.5}
-@keyframes marquee{to{transform:translateX(-50%)}}
 
 /* ───────────── Sections ───────────── */
 /* :not(#x) élève la spécificité pour passer devant les anciens fonds définis par identifiant */
@@ -290,16 +283,14 @@ footer{background:transparent;color:var(--ink);padding:clamp(80px,11vw,160px) va
   .product-hero h1{font-size:clamp(2.5rem,12.5vw,4rem)}
   .product-hero .eyebrow{font-size:.72rem}
   .product-hero .hero-description{font-size:1.1rem}
-  .marquee-track{font-size:1.5rem}
-  .footer-base{flex-direction:column;align-items:flex-start}
+    .footer-base{flex-direction:column;align-items:flex-start}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto}
-  .marquee-track{animation:none}
-  .split-ready:not(.split-done) .wi{transform:none}
+    .split-ready:not(.split-done) .wi{transform:none}
   .curtain{display:none}
 }
-@media print{header,.curtain,.marquee{display:none}}
+@media print{header,.curtain,}
 
 /* ───────────── Zones de toucher ≥ 44 px et lisibilité des étapes héritées ───────────── */
 .launch-section b,.launch-section .number{color:var(--leaf)}
@@ -331,3 +322,36 @@ input[type=range]{height:44px}header nav{order:2}
 .campus-art.campus-illustration::after,.campus-art.campus-illustration::before{display:none}
 .campus-art.campus-illustration img{display:block;width:100%;height:auto;border-radius:var(--r)}
 main .split>div>.eyebrow{text-align:left;margin-left:0}
+
+/* ───────────── Passe d'audit (Taste, Impeccable, Unslop) ───────────── */
+/* lettres sans coupure : le « y » d'Essayer. et les jambages des titres animés */
+.w{padding-block:.08em .24em;margin-block:-.08em -.24em}
+.wi{line-height:1.08}
+/* l'anneau de focus reste dans la barre du haut */
+header a:focus-visible,header button:focus-visible{outline-offset:-3px}
+/* visuels réels de la station dans les sections */
+.station-figure{margin:clamp(24px,4vw,44px) auto 0;max-width:460px;border-radius:var(--r);overflow:hidden;background:var(--night)}
+.station-figure img{display:block;width:100%;height:auto}
+.footer-base .credits{flex:0 0 100%;align-self:stretch;order:9;margin:0;padding-top:18px;border-top:1px solid var(--line);font-size:.8rem;line-height:1.5;color:var(--muted);max-width:100%;width:100%;overflow-wrap:anywhere}
+@media(max-width:700px){.footer-base .credits{flex:0 0 auto}}
+/* contrastes : texte secondaire plus lisible sur fond blanc */
+.promise-grid>article p,.architecture-chain article p,.sequence-card p,.eco-shop-product-copy p,.eco-shop-product-copy small{color:var(--muted)}
+/* même bouton principal partout, y compris dans l'en-tête */
+.header-cta{background:var(--leaf);color:#fff}
+.header-cta:hover{background:var(--leaf-deep)}
+/* 320 px : le sélecteur d'objets passe à la ligne au lieu de déborder */
+@media(max-width:380px){.story-picker{flex-wrap:wrap}.story-picker button{flex:1 1 44%}}
+/* le bouton « retour en haut » ne couvre plus le contenu sur téléphone */
+@media(max-width:700px){.back-top{width:40px;height:40px;right:12px;bottom:12px;opacity:.92}}
+/* titres : lignes équilibrées par le navigateur, mesure plus large pour les phrases complètes */
+main .section>h2,main .story-head h2{max-width:22ch;text-wrap:balance}
+@media(min-width:1000px){main .section>h2,main .story-head h2{font-size:clamp(2.2rem,4.4vw,4.1rem)}}
+/* bouton principal du hero : même vert que l'en-tête */
+.product-hero .button,.product-hero .button.light{background:var(--leaf);color:#fff}
+.product-hero .button::after{background:var(--leaf-deep)}
+.hide-sm{margin-left:.35em}
+.button.light,.dark .button.light{background:var(--leaf);color:#fff}
+.button.light::after{background:var(--leaf-deep)}
+main .section>.button,main .section>a.button{display:flex;width:fit-content;margin:clamp(24px,3vw,40px) auto 0}
+/* plus d'apparition au défilement sur les blocs : le contenu est là, stable, sans décalage ni saccade */
+.reveal-ready,.reveal-ready.visible,.sequence-card{opacity:1;transform:none;transition:none;animation:none}
