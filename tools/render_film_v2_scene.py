@@ -8,14 +8,23 @@ import bpy, math, json, re, sys
 from mathutils import Vector
 ROOT=Path(__file__).resolve().parents[1]
 CACHE=Path('/tmp/ecoscan-film-v2');CACHE.mkdir(exist_ok=True)
-W,H=1280,720
+import os
+W,H=int(os.environ.get('FILM_W',1280)),int(os.environ.get('FILM_H',720))
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 scene=bpy.context.scene
-scene.render.engine='BLENDER_EEVEE_NEXT'
-scene.eevee.taa_render_samples=32
+if os.environ.get('FILM_ENGINE')=='CYCLES':   # sans carte graphique : moteur sur processeur
+ import addon_utils;addon_utils.enable('cycles',default_set=True)
+try:scene.render.engine=os.environ.get('FILM_ENGINE','BLENDER_EEVEE_NEXT')   # Blender 4.3 / 4.4
+except TypeError:scene.render.engine=os.environ.get('FILM_ENGINE','BLENDER_EEVEE')  # Blender 5.x
+if scene.render.engine=='CYCLES':
+ scene.cycles.device='CPU';scene.cycles.samples=int(os.environ.get('FILM_SAMPLES',96));scene.cycles.use_denoising=True
+else:scene.eevee.taa_render_samples=32
 scene.render.resolution_x=W;scene.render.resolution_y=H;scene.render.resolution_percentage=100
 scene.render.image_settings.file_format='PNG'
-scene.view_settings.view_transform='AgX';scene.view_settings.look='AgX - Medium High Contrast'
+scene.view_settings.view_transform='AgX'
+for _look in ('AgX - Medium High Contrast','Medium High Contrast'):
+ try:scene.view_settings.look=_look;break
+ except TypeError:pass
 scene.world.color=(.012,.025,.02)
 
 def material(name,color,metal=0,rough=.45,emission=0):
@@ -148,6 +157,7 @@ for name,loc,power,size,color in [
 bpy.ops.object.camera_add();cam=bpy.context.object;scene.camera=cam;cam.data.lens=55
 from bpy_extras.object_utils import world_to_camera_view
 POINTS={'entry':(0,-.45,1.53),'tray':(-.15,-.1,1.45),'separator':(-.27,.0,1.26),'sensor':(0,-.1,1.16),'diverter':(0,-.03,.90),'pet':(-.4,-.08,.55),'alu':(0,-.08,.55),'paper':(.4,-.08,.55),'hold':(0,.28,.80),'qr':(.36,-.46,1.05)}
+V3_LAYOUT={'hero':(-.15,1),'connection':(-.15,1),'entry':(-.2,.86),'cutaway':(-.2,.9),'separator':(-.2,.86),'sensor':(-.2,.86),'routing':(-.2,.88),'service':(-.17,1),'final':(-.15,1)}
 SHOTS=[
  ('hero',(3.3,-5,2.8),(-.50,0,1.01),55,False),
  ('connection',(2.65,-4.8,2.3),(-.49,0,1.05),55,False),
@@ -158,21 +168,49 @@ SHOTS=[
  ('routing',(2.6,-4.4,2.3),(-.67,0,.86),62,True),
  ('service',(3.7,-5.4,2.9),(-.44,0,1),55,True),
  ('final',(2.85,-5.6,2.4),(-.50,0,1.02),55,False),
+ ('routing-neutral',(2.6,-4.4,2.3),(-.67,0,.86),62,True),
+ ('routing-pet',(2.6,-4.4,2.3),(-.67,0,.86),62,True),
+ ('routing-alu',(2.6,-4.4,2.3),(-.67,0,.86),62,True),
+ ('routing-paper',(2.6,-4.4,2.3),(-.67,0,.86),62,True),
+ ('routing-hold',(2.6,-4.4,2.3),(-.67,0,.86),62,True),
  ('model-exterior',(2.65,-4.6,2.60),(0,0,.97),55,False),
  ('model-cutaway',(2.65,-4.6,2.60),(0,0,.97),55,True),
 ]
+from mathutils import Matrix, Euler
+BASE={o.name:(o.location.copy(),o.rotation_euler.copy()) for o in moving}
+def turn(o,pivot,axis,angle):
+ loc,rot=BASE[o.name];R=Matrix.Rotation(angle,4,axis)
+ o.location=Vector(pivot)+R.to_3x3()@(loc-Vector(pivot));o.rotation_euler=(R@rot.to_matrix().to_4x4()).to_euler()
+def routing_state(state):
+ for o in moving:o.location,o.rotation_euler=BASE[o.name][0].copy(),BASE[o.name][1].copy()
+ sel=lambda o:o.name.startswith(('Tilting selector wing','Selector end frame'))
+ if state in('pet','paper'):
+  for o in moving:
+   if sel(o):turn(o,SELECTOR_PIVOT,'Y',math.radians(-24 if state=='pet' else 24))
+ if state=='alu':
+  for o in moving:
+   if o.name.startswith('Central aluminium trap'):turn(o,TRAP_PIVOT,'Y',math.radians(82))
+ if state=='hold':
+  for o in moving:
+   if o.name.startswith('Rear verification flap'):turn(o,REJECT_PIVOT,'X',math.radians(-52))
+ONLY=[x for x in os.environ.get('FILM_ONLY','').split(',') if x]
 bpy.ops.wm.save_as_mainfile(filepath=str(CACHE/'econova-canonical.blend'))
 meta={}
 existing=json.loads((CACHE/'plates.json').read_text()) if (CACHE/'plates.json').exists() else {}
 for name,location,target,lens,cut in SHOTS:
  if '--reuse' in sys.argv and (CACHE/(name+'.png')).exists() and name in existing and existing[name]['target']==list(target) and existing[name].get('model')=='compact-articulated-v3':
   meta[name]=existing[name];continue
+ if ONLY and name not in ONLY:continue
  for o in external:o.hide_render=cut
  # Dynamic film frames draw the articulated plates in the exact camera projection.
  for o in moving:o.hide_render=name=='routing'
+ routing_state(name.split('-',1)[1] if name.startswith('routing-') else 'neutral')
  # Side panel is removed for a genuine cutaway view; cabinet rear remains for coherence.
  for o in shell:o.hide_render=cut and o.name.startswith(('Right exterior','Top','Left exterior'))
- cam.location=location;cam.rotation_euler=(Vector(target)-cam.location).to_track_quat('-Z','Y').to_euler();cam.data.lens=lens
+ # Film v3 (FILM_LAYOUT=v3) : la station est cadrée à droite pour laisser la colonne de texte à gauche.
+ shift,lscale=V3_LAYOUT.get(name.split('-')[0],(0,1)) if os.environ.get('FILM_LAYOUT')=='v3' else (0,1)
+ cam.data.shift_x=shift
+ cam.location=location;cam.rotation_euler=(Vector(target)-cam.location).to_track_quat('-Z','Y').to_euler();cam.data.lens=lens*lscale
  scene.render.filepath=str(CACHE/(name+'.png'))
  # Camera matrix updates before projection and rendering.
  bpy.context.view_layer.update()

@@ -1,6 +1,7 @@
 'use strict';
 /*
- * Rend le film explicatif v3 (motion design 1080p) à partir de la scène animée du site.
+ * Rend le film explicatif v3 (1080p) : rendus 3D de la station (Blender, voir render_film_v2_scene.py)
+ * et objets 3D (render_film_v3_sprites.py), animés et composés dans le navigateur.
  * Aucune dépendance payante : Playwright + Chromium, puis ffmpeg pour l'encodage.
  *
  *   node tools/render_film_v3.cjs --lang fr --out /tmp/film-fr            # toutes les images (30 i/s)
@@ -25,13 +26,13 @@ const url = p => 'file://' + path.join(root, p);
 
 (async () => {
   fs.mkdirSync(out, { recursive: true });
-  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  const svg = index.match(/<svg id="story-svg".*?<\/svg>/s)[0];
-  const html = fs.readFileSync(path.join(__dirname, 'film_v3', 'scene.html'), 'utf8')
+  const dir = path.join(__dirname, 'film_v3');
+  const plates = fs.readFileSync(path.join(dir, 'plates', 'plates.json'), 'utf8');
+  const html = fs.readFileSync(path.join(dir, 'scene.html'), 'utf8')
     .replace('__FONT__', url('assets/fonts/inter-latin-wght-normal.woff2'))
-    .replace('__LEAVES__', url('assets/leaves.svg'))
     .replace('__GSAP__', url('assets/vendor/gsap.min.js'))
-    .replace('__SVG__', svg);
+    .replace('__DIR__', 'file://' + dir)
+    .replace('__PLATES__', plates);
   const page0 = path.join(os.tmpdir(), `film_v3_${lang}.html`);
   fs.writeFileSync(page0, html);
 
@@ -46,7 +47,7 @@ const url = p => 'file://' + path.join(root, p);
     const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
     await page.goto('file://' + page0 + '?lang=' + lang);
     await page.evaluate(() => document.fonts.ready);
-    await page.waitForFunction(() => window.ready === true);
+    await page.waitForFunction(() => window.ready === true, null, { timeout: 60000 });
     await page.evaluate(() => window.seek(0));
     for (const f of mine) {
       await page.evaluate(t => window.seek(t), f.t);
