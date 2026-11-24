@@ -52,9 +52,9 @@
       [...node.childNodes].forEach(n => {
         if (n.nodeType === 3) {
           const frag = document.createDocumentFragment();
-          n.textContent.split(/(\s+)/).forEach(part => {
+          n.textContent.replace(/ ([?!:;»])/g, ' $1').split(/([ \t\r\n]+)/).forEach(part => {
             if (!part) return;
-            if (/^\s+$/.test(part)) { frag.append(document.createTextNode(' ')); return; }
+            if (/^[ \t\r\n]+$/.test(part)) { frag.append(document.createTextNode(' ')); return; }
             const w = document.createElement('span'); w.className = 'w';
             const i = document.createElement('span'); i.className = 'wi'; i.textContent = part;
             w.append(i); frag.append(w);
@@ -336,7 +336,7 @@
       w = host.clientWidth; h = host.clientHeight;
       cv.width = w * dpr; cv.height = h * dpr; cv.style.width = w + 'px'; cv.style.height = h + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.round(clamp(w * h / (mobile ? 15000 : 9500), 22, 110));
+      const n = Math.round(clamp(w * h / (mobile ? 19000 : 14000), 18, 80));
       parts = Array.from({ length: n }, () => make(true));
     }
     function make(anywhere) {
@@ -345,7 +345,7 @@
       return {
         type, s, x: Math.random() * w, y: anywhere ? Math.random() * h : -20,
         vy: 0.16 + Math.random() * 0.5, vx: (Math.random() - 0.5) * 0.12, rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.012,
-        c: COLORS[Math.floor(Math.random() * COLORS.length)], a: 0.1 + Math.random() * 0.28, lit: 0, ox: 0, oy: 0
+        c: COLORS[Math.floor(Math.random() * COLORS.length)], a: 0.07 + Math.random() * 0.16, lit: 0, ox: 0, oy: 0
       };
     }
     function shape(p) {
@@ -397,4 +397,16 @@
     mqReduce.addEventListener?.('change', () => { if (reduced()) { cancelAnimationFrame(raf); raf = 0; drawStatic(); } else start(); });
     start();
   }
+})();
+
+/* Halo de pointeur sur les surfaces sombres (écrans à pointeur fin uniquement) */
+(() => {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.story, .manifesto, #impact, #campus-pilote').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--sx', (e.clientX - r.left) + 'px'); el.style.setProperty('--sy', (e.clientY - r.top) + 'px'); el.style.setProperty('--glow', 1);
+    }, { passive: true });
+    el.addEventListener('pointerleave', () => el.style.setProperty('--glow', 0));
+  });
 })();

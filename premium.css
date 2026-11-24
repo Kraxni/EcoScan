@@ -326,3 +326,57 @@ footer::before{content:"";position:absolute;left:50%;top:0;translate:-50% -40%;w
   header,header.is-hidden{transform:none}
 }
 @media(print){header,.curtain,.hero-canvas,.marquee{display:none}}
+
+/* ───────────── Harmonisation des composants hérités (app, boutique, sections par identifiant) ───────────── */
+main #concept,main #video-explicative,main .launch-section,main .future-manifesto{background:var(--night)}
+main #concept{color:var(--bone)}
+main .launch-section{color:var(--bone)}
+.eco-app-tabs button[aria-selected=true],.eco-app-action,.eco-shop-filters button[aria-pressed=true],.eco-shop-dialog-actions button[data-primary],.protocol-options button[aria-pressed=true]{background:var(--night)!important;color:var(--signal)!important;border-color:var(--night)!important}
+.eco-app-link.eco-app-primary{background:var(--night)!important;color:var(--signal)!important;border-color:var(--night)!important}
+.eco-app-link.eco-app-primary:hover{background:var(--moss)!important}
+.eco-app-balance,.eco-shop-priority,.capacity-result{background:var(--night)!important;color:var(--bone)!important;border-radius:24px}
+.eco-app-balance strong,.eco-app-balance b{color:var(--signal)}
+.route-sensor,.sensor-bar{background:var(--night);color:var(--signal)}
+.eco-shop-dialog::backdrop{background:rgba(8,21,15,.7)}
+.eco-shop-dialog{border-radius:28px}
+.eco-shop-card,.eco-product-card,.eco-shop-grid>*{border-radius:26px}
+.back-top:hover{background:var(--bone)}
+.launch-section .grid>article,.launch-section article{border-color:var(--line-light)}
+.launch-section p,#concept p{color:rgba(239,234,220,.74)}
+.launch-section h2,.launch-section h3,#concept h2,#concept h3{color:var(--bone)}
+.launch-section em,#concept em{color:var(--signal)}
+
+/* ───────────── Finitions passe 2 ───────────── */
+header nav a,header nav a[aria-current=page]{text-decoration:none!important}
+.product-hero h1 em{font-style:normal;font-weight:360}
+.live-dot{margin-top:.2em}
+@media(max-width:700px){
+  .product-hero h1{font-size:clamp(2.5rem,11.6vw,4.4rem)}
+  .product-hero .eyebrow{font-size:.6rem;align-items:flex-start}
+  .hot{font-size:.5rem;padding:4px 8px 4px 5px;gap:5px}.hot b{width:16px;height:16px;font-size:.5rem}
+  .hot-3{display:none}.hot-1{top:18%}.hot-2{top:52%;right:3%}
+  .product-hero{padding-top:104px;gap:36px}
+  .marquee-track{font-size:1.5rem}
+}
+main #station,main #qr-session{background:var(--bone-2)}
+main #architecture,main #demo,main #faisabilite{background:var(--bone)}
+
+/* ───────────── Sans JavaScript : tout reste lisible ───────────── */
+.story-steps small{max-height:none;opacity:1;margin-top:.4rem}
+.story-steps button{opacity:1}
+html:not(.js) .story-picker,html:not(.js) .story-hint,html:not(.js) .story-progress{display:none}
+html.js .story-steps small{max-height:0;opacity:0;margin-top:0}
+html.js .story-steps li.is-active small,html.js .story-pin.is-static .story-steps small{max-height:9em;opacity:1;margin-top:.5rem}
+html.js .story-steps button{opacity:.42}
+html.js .story-steps li.is-active button,html.js .story-pin.is-static .story-steps button{opacity:1}
+html.js .story-steps li.is-done button{opacity:.62}
+@media(max-width:860px){html.js .story-steps li:not(.is-active) small{display:none}html.js .story-pin.is-static .story-steps li small{display:block}}
+
+/* Halo qui suit le pointeur sur les surfaces sombres */
+.story,.manifesto,.impact,#impact,#campus-pilote,footer{--sx:50%;--sy:30%}
+.story::after,.manifesto::after,#impact::after,#campus-pilote::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px circle at var(--sx) var(--sy),rgba(201,242,75,.08),transparent 70%);opacity:var(--glow,0);transition:opacity .5s}
+.manifesto>*,#impact>*,#campus-pilote>*{position:relative;z-index:1}
+.participate .commitments{margin:1.4rem 0}
+.participate-actions{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:1.6rem}
+.participate .hero-link{color:var(--night)}
+@media(max-width:1000px){.hero-product{margin-inline:auto;width:100%}}
