@@ -398,15 +398,3 @@
     start();
   }
 })();
-
-/* Halo de pointeur sur les surfaces sombres (écrans à pointeur fin uniquement) */
-(() => {
-  if (!matchMedia('(hover: hover) and (pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  document.querySelectorAll('.story, .manifesto, #impact, #campus-pilote').forEach(el => {
-    el.addEventListener('pointermove', e => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty('--sx', (e.clientX - r.left) + 'px'); el.style.setProperty('--sy', (e.clientY - r.top) + 'px'); el.style.setProperty('--glow', 1);
-    }, { passive: true });
-    el.addEventListener('pointerleave', () => el.style.setProperty('--glow', 0));
-  });
-})();

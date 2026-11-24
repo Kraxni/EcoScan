@@ -380,3 +380,56 @@ html.js .story-steps li.is-done button{opacity:.62}
 .participate-actions{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:1.6rem}
 .participate .hero-link{color:var(--night)}
 @media(max-width:1000px){.hero-product{margin-inline:auto;width:100%}}
+
+/* ═════════ Passe « sans artifice » — voir DESIGN.md ═════════
+   Planche de laboratoire : filets nets, angles droits, aucun halo, aucun flou, aucune ombre molle. */
+:root{--r:3px}
+/* lumière décorative et flou supprimés */
+.product-hero{background:var(--night);background-image:linear-gradient(to right,rgba(239,234,220,.07) 1px,transparent 1px);background-size:calc(100% / 12) 100%;background-position:var(--gutter) 0}
+.video-section::before,footer::before,.story::after,.manifesto::after,#impact::after,#campus-pilote::after{display:none!important}
+.hero-product-frame,.video-frame{box-shadow:none;border:1px solid rgba(239,234,220,.45)}
+.video-frame{padding:6px}
+#reading-progress{box-shadow:none}
+.back-top{box-shadow:none;border:1px solid var(--night)}
+.story-visual svg{filter:none}
+.live-dot{box-shadow:none;animation:blink 1.6s steps(2,jump-none) infinite}
+@keyframes blink{50%{opacity:.25}}
+.hot{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--night);border-radius:var(--r);border-color:var(--signal)}
+.hot b{border-radius:2px}
+/* barre de navigation : une règle, pas une pilule de verre */
+header{top:0;left:0;translate:none;width:100%;height:60px;border-radius:0;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--night);border:0;border-bottom:1px solid rgba(239,234,220,.25);box-shadow:none;padding:0 var(--gutter)}
+header.is-scrolled{background:var(--night)}
+header nav a{border-radius:var(--r)}
+.workspace-guide{margin-top:84px;border-radius:var(--r)}
+@media(max-width:700px){header{top:0;width:100%;height:56px;padding:0 14px}}
+/* angles nets */
+.button,.story-picker button,.hero-tags span,.topic-links a,.blueprint-controls button,.blueprint-details button,.film-language-buttons button,.video-chapters button,.object-token,.menu-button,#workspace-shortcuts a,.product-hero .hero-tags span,.eco-shop-filters button,.eco-app-tabs button{border-radius:var(--r)!important}
+.button::after{border-radius:0}
+.hero-bottom a,.curtain-mark{border-radius:var(--r)}
+.demo-card,.points-card,.station-console,.demo-intro,.eco-app-shell,.app-card,.shop-card,.shop-product,.readiness-grid>*,.feasibility-lab,.quiz-card,.resource-card,.vision-path,.laboratory-card,.canonical-model,.blueprint-card,.campus-art,.film-language,.measurement,.drop-zone,.eco-app-balance,.eco-shop-priority,.capacity-result,.eco-shop-card,.eco-product-card,.eco-shop-grid>*,.eco-shop-dialog,.faq-list details,.faq-list details[open]{border-radius:4px!important}
+.points-card.phone-demo{border-radius:28px!important}
+.film-language{background:transparent}
+.hero-product-frame img{transform:none}
+/* sur-titres : conservés pour les lecteurs d'écran, masqués à l'œil sauf dans le hero */
+main .section>.eyebrow,main .section>div>.eyebrow,main .story-head>.eyebrow,main .launch-section>.eyebrow,.footer-kicker{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.footer-kicker{position:static;width:auto;height:auto;clip:auto;overflow:visible}
+/* colonnes asymétriques, en escalier — plus de trio de cartes identiques */
+.grid.three,.promise-grid,.future-grid{grid-template-columns:1.55fr 1fr 1fr;align-items:start}
+.grid.three>:nth-child(2),.promise-grid>:nth-child(2),.future-grid>:nth-child(2){margin-top:clamp(0px,5vw,76px)}
+.grid.three>:nth-child(3),.promise-grid>:nth-child(3),.future-grid>:nth-child(3){margin-top:clamp(0px,10vw,152px)}
+.grid.three>:nth-child(1) h3,.promise-grid>:nth-child(1) h3{font-size:clamp(1.6rem,2.6vw,2.4rem)}
+.grid.four{grid-template-columns:1fr 1.5fr 1fr 1.2fr;align-items:start}
+.grid.four>:nth-child(even){margin-top:clamp(0px,4vw,56px)}
+.metrics{grid-template-columns:1.6fr 1fr 1fr}
+@media(max-width:900px){
+  .grid.three,.promise-grid,.future-grid,.grid.four,.metrics{grid-template-columns:1fr}
+  .grid.three>*,.promise-grid>*,.future-grid>*,.grid.four>*{margin-top:0!important}
+}
+.scan-sweep{height:2px;background:var(--signal);border:0;mix-blend-mode:normal;box-shadow:none;animation:sweep-line 5.5s cubic-bezier(.65,0,.35,1) infinite}
+@keyframes sweep-line{0%{transform:translateY(0);opacity:0}10%{opacity:1}85%{opacity:1}100%{transform:translateY(calc(var(--frame-h,420px)));opacity:0}}
+.hero-product-frame{border-radius:4px}
+.scan-sweep{animation-name:sweep-top}
+@keyframes sweep-top{0%{top:0;opacity:0}10%{opacity:1}85%{opacity:1}100%{top:100%;opacity:0}}
+/* l'italique de Fraunces dessine un « v » en « w » : l'accent passe par la couleur et le poids */
+em,.curtain-label{font-style:normal;font-weight:330}
+.marquee-track{font-style:normal;font-weight:340}
