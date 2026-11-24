@@ -176,6 +176,25 @@ SHOTS=[
  ('model-exterior',(2.65,-4.6,2.60),(0,0,.97),55,False),
  ('model-cutaway',(2.65,-4.6,2.60),(0,0,.97),55,True),
 ]
+# Images fixes du site (FILM_SET=stills) : la station ENTIÈRE, centrée, détourée (fond transparent) avec une ombre douce
+# au sol. Elle se pose directement sur le fond de la page, sans recadrage.
+PREFIX=''
+if os.environ.get('FILM_SET')=='stills':
+ PREFIX='still-'
+ scene.render.film_transparent=True
+ scene.render.image_settings.color_mode='RGBA'
+ scene.cycles.film_exposure=1.0
+ # le sol éclaire encore la scène (reflets) mais reste invisible pour la caméra ; l'ombre au sol est dessinée en CSS
+ bpy.data.objects['Studio floor'].visible_camera=False
+ # (nom, position caméra, cible, focale, vue en coupe)
+ SHOTS=[
+  ('exterior',(2.65,-4.6,2.6),(0,0,.97),78,False),
+  ('front',(.9,-5.7,1.9),(0,0,.97),78,False),
+  ('cutaway',(2.65,-4.6,2.6),(0,0,.97),78,True),
+  ('routing-pet',(2.65,-4.6,2.6),(0,0,.97),78,True),
+  ('routing-alu',(1.9,-4.3,3.5),(0,0,.97),78,True),
+  ('routing-hold',(3.7,-3.5,2.3),(0,0,.97),78,True),
+ ]
 from mathutils import Matrix, Euler
 BASE={o.name:(o.location.copy(),o.rotation_euler.copy()) for o in moving}
 def turn(o,pivot,axis,angle):
@@ -211,7 +230,7 @@ for name,location,target,lens,cut in SHOTS:
  shift,lscale=V3_LAYOUT.get(name.split('-')[0],(0,1)) if os.environ.get('FILM_LAYOUT')=='v3' else (0,1)
  cam.data.shift_x=shift
  cam.location=location;cam.rotation_euler=(Vector(target)-cam.location).to_track_quat('-Z','Y').to_euler();cam.data.lens=lens*lscale
- scene.render.filepath=str(CACHE/(name+'.png'))
+ scene.render.filepath=str(CACHE/(PREFIX+name+'.png'))
  # Camera matrix updates before projection and rendering.
  bpy.context.view_layer.update()
  projected={}
@@ -219,5 +238,5 @@ for name,location,target,lens,cut in SHOTS:
   p=world_to_camera_view(scene,cam,Vector(point));projected[key]=[p.x*W,(1-p.y)*H]
  meta[name]={'points':projected,'camera':list(location),'target':list(target),'lens':lens,'model':'compact-articulated-v3','routing':{'selector_pivot':SELECTOR_PIVOT,'trap_pivot':TRAP_PIVOT,'reject_pivot':REJECT_PIVOT}}
  bpy.ops.render.render(write_still=True)
- (CACHE/'plates.json').write_text(json.dumps(meta,indent=2))
+ (CACHE/(PREFIX+'plates.json')).write_text(json.dumps(meta,indent=2))
 print('Original ÉcoNova plate production complete:',CACHE)

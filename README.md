@@ -158,3 +158,7 @@ La simulation affiche un reçu près de l’ouverture, issu du même solde que l
 Les suites couvrent parcours normal, crédit unique, annulations, objet incertain, échange, stockage bloqué, clavier, tactile, glisser-déposer, QR, calculateur, protocole téléchargé, vrais médias, recherche des chapitres, no-JS et plusieurs largeurs dès 360 px.
 
 Avant de publier : vérifier les liens et images, tester le menu mobile, le quiz complet, les erreurs de la démo et la réduction des animations. Conserver les mentions « concept », « simulation » et « objectif » jusqu’à fourniture de preuves ; ne pas ajouter de contact, récompense ou partenaire opérationnel sans confirmation.
+
+### Images de la station (assets/station)
+
+Six vues 3D entières, détourées, avec ombre douce intégrée : `FILM_SET=stills FILM_ENGINE=CYCLES FILM_SAMPLES=48 FILM_W=1000 FILM_H=1000 python tools/render_film_v2_scene.py` (Blender via `pip install bpy`, sur processeur, environ 1 min 40 par image), puis `python tools/build_station_stills.py` pour produire les WebP (480, 800 et 1000 px). Concept visuel, pas un modèle d'ingénierie.

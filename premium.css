@@ -449,3 +449,59 @@ dialog,.eco-shop-dialog{overscroll-behavior:contain}
 #quiz .quiz-card{margin-inline:auto}
 .dashboard-summary{grid-template-columns:repeat(4,1fr)}
 @media(max-width:700px){.dashboard-summary{grid-template-columns:repeat(2,1fr)}}
+
+/* ───────────── Passe « plus vivant » : espacement resserré, station détourée, mouvement au défilement ───────────── */
+/* moins de vide entre deux sections */
+.section{padding-block:clamp(52px,6.5vw,96px)}
+/* la station est posée directement sur la page (rendu 3D détouré, ombre au sol incluse), jamais recadrée */
+.station-figure{width:min(100%,clamp(300px,44vw,560px));max-width:none;margin:clamp(0px,1vw,12px) auto clamp(28px,3.4vw,44px);background:none;border-radius:0;overflow:visible}
+.station-figure img{display:block;width:100%;height:auto;aspect-ratio:1}
+
+/* Le mouvement est piloté par le défilement natif (animation-timeline) : transform et opacité seulement,
+   exécutés hors du fil principal. Sans prise en charge, ou avec « réduire les animations », tout reste statique. */
+@media (prefers-reduced-motion:no-preference){
+@supports (animation-timeline:view()){
+@keyframes sd-rise{from{opacity:0;translate:0 44px}to{opacity:1;translate:0 0}}
+@keyframes sd-figure{from{opacity:0;translate:0 80px;scale:.88}to{opacity:1;translate:0 0;scale:1}}
+@keyframes sd-drift{from{translate:0 30px}to{translate:0 -30px}}
+@keyframes sd-float{from{transform:translateY(-6px)}to{transform:translateY(6px)}}
+@keyframes sd-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes sd-away{to{opacity:0;translate:0 -44px}}
+@keyframes sd-sink{to{translate:0 90px;opacity:.4}}
+
+/* l'entrée de page s'estompe quand on la quitte */
+.product-hero .hero-copy{animation:sd-away linear both;animation-timeline:view();animation-range:exit 25% exit 100%}
+.product-hero .hero-product{animation:sd-sink linear both;animation-timeline:view();animation-range:exit 0% exit 100%}
+
+/* la station monte et grandit en entrant, puis dérive lentement pendant le défilement */
+.station-figure{animation:sd-figure linear both;animation-timeline:view();animation-range:entry 0% entry 80%}
+.station-figure img{animation:sd-drift linear both,sd-float 7s ease-in-out infinite alternate;animation-timeline:view(),auto;animation-range:cover 0% cover 100%,normal}
+
+/* cartes, lignes et étapes : montée décalée, une chaîne par rangée */
+.grid>article,.future-grid>article,.architecture-chain>article,.roadmap>li,.promise-grid>article,.readiness-grid>*,.resource-grid>*,.faq-list>details{animation:sd-rise linear both;animation-timeline:view();animation-range:entry calc(var(--i,0)*8%) entry calc(52% + var(--i,0)*8%)}
+.grid>article:nth-child(2),.future-grid>article:nth-child(2),.architecture-chain>article:nth-child(2),.roadmap>li:nth-child(even),.readiness-grid>*:nth-child(2){--i:1}
+.grid>article:nth-child(3),.future-grid>article:nth-child(3),.architecture-chain>article:nth-child(3){--i:2}
+.grid>article:nth-child(4),.architecture-chain>article:nth-child(4){--i:3}
+.architecture-chain>article:nth-child(5){--i:4}
+@media(max-width:700px){.grid>article,.future-grid>article,.architecture-chain>article,.roadmap>li,.promise-grid>article{--i:0 !important}}
+
+/* la ligne de chaque entrée de la liste se trace de gauche à droite */
+.promise-grid>article{position:relative;border-top-color:transparent}
+.promise-grid>article::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--line);transform-origin:left center;animation:sd-line linear both;animation-timeline:view();animation-range:entry 0% entry 90%}
+}
+}
+/* le détail d'une carte réagit au pointeur : légère élévation, sans toucher à la mise en page */
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+.roadmap>li,.architecture-chain>article,.future-grid>article{transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.roadmap>li:hover,.architecture-chain>article:hover,.future-grid>article:hover{transform:translateY(-3px);box-shadow:0 12px 30px -18px rgba(15,42,28,.35)}
+}
+.roadmap>li{border-top:0}
+.station-figure{margin-top:calc(-1 * clamp(0px,2vw,28px))}
+@media print{*,*::before,*::after{animation:none!important}}
+/* « clip » rogne comme « hidden » mais ne crée pas de conteneur de défilement : les animations liées au défilement de la page restent actives */
+.product-hero{overflow:clip}
+/* pas de vide gênant : le panneau sombre centre son texte, le plan se centre face à sa légende */
+#architecture .grid.three>article:first-child{display:flex;flex-direction:column;justify-content:center}
+#architecture .grid.three>article:first-child h3{font-size:clamp(1.8rem,3vw,2.8rem);margin-bottom:.5em}
+#architecture .grid.three>article:first-child p{font-size:clamp(1.1rem,1.4vw,1.3rem);line-height:1.6}
+@media(min-width:1000px){.blueprint-card{align-items:center}}

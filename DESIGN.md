@@ -25,3 +25,13 @@ Pile système : **SF Pro** sur Apple, **Inter** (hébergée dans `assets/fonts/`
 3. Un bouton primaire vert, un lien secondaire avec chevron.
 4. Le mouvement explique (trajet d'un objet, défilement fluide), il ne décore pas.
 5. Aucun résultat, partenariat ou équipement présenté comme réel : projet académique, concept.
+
+## Mouvement au défilement
+
+Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteur de défilement ni JavaScript : seulement `transform`, `translate`, `scale` et `opacity`, exécutés hors du fil principal.
+
+- La station (rendu 3D détouré) monte et grandit en entrant, puis dérive lentement ; une très légère flottaison l'anime au repos.
+- Les cartes, lignes et étapes montent une à une (décalage par rangée) ; chaque entrée de la liste de la promesse trace sa ligne de gauche à droite.
+- L'entrée de page s'estompe quand on la quitte ; les mots des titres montent à l'arrivée du titre (GSAP, découpage fait juste avant l'affichage).
+- Sans prise en charge de `animation-timeline`, avec « réduire les animations » ou à l'impression, tout reste statique et lisible.
+- Un élément à `overflow: hidden` devient un conteneur de défilement et casse la chronologie : utiliser `overflow: clip` sur les ancêtres d'éléments animés.

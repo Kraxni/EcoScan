@@ -70,7 +70,9 @@
 
   /* ───────────── Le reste, au repos du navigateur ───────────── */
   idle(() => {
-    const splitTargets = $$('#trajet h2, #mission h2, #participer h2');
+    /* Tous les titres de section : les mots montent un à un quand le titre arrive à l'écran. */
+    const splitTargets = [...new Set($$('main .section > h2, main .story-head h2, #trajet h2, #mission h2, #participer h2'))]
+      .filter(h => !h.classList.contains('sr-only') && !h.hidden);
     const splitWords = el => {
       if (el.dataset.split) return $$('.wi', el);
       el.dataset.split = '1';
@@ -99,7 +101,13 @@
         gsap.fromTo($$('.wi', e.target), { yPercent: 112 }, { yPercent: 0, duration: 0.9, ease: 'expo.out', stagger: 0.045, clearProps: 'transform' });
         e.target.classList.add('split-done');
       }), { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
-      splitTargets.forEach(h => { splitWords(h); h.classList.add('split-ready'); io.observe(h); });
+      /* Le découpage en mots se fait juste avant l'arrivée du titre (900 px d'avance), pas tout d'un coup au chargement. */
+      const splitIO = new IntersectionObserver(entries => entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        splitIO.unobserve(e.target);
+        splitWords(e.target); e.target.classList.add('split-ready'); io.observe(e.target);
+      }), { rootMargin: '0px 0px 900px 0px' });
+      splitTargets.forEach(h => splitIO.observe(h));
 
       /* Chiffres d'objectifs : compteur (les libellés restent « objectif », jamais un résultat) */
       const co = new IntersectionObserver(entries => entries.forEach(e => {

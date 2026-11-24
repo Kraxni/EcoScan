@@ -360,24 +360,21 @@ document.querySelectorAll('[data-film-language]').forEach(button=>button.addEven
   if(!started)$('video-status').textContent='Narration sélectionnée. Appuyez sur lecture pour regarder le film.';
 }));
 
-// Reading progress: the page height is measured only when it can change (resize, content growth),
-// never on every scroll frame, to avoid forced layouts.
-let scrollScheduled=false,progressTotal=0,measureQueued=false;
-function measureProgress() {progressTotal=document.documentElement.scrollHeight-innerHeight;}
+// Reading progress: the page height is measured lazily, on the first scroll after it may have changed
+// (resize, content growth), never at load and never on every scroll frame: no forced layout while the page paints.
+let scrollScheduled=false,progressTotal=0,progressStale=true;
 function updateReadingProgress() {
   scrollScheduled=false;
+  if(progressStale){progressStale=false;progressTotal=document.documentElement.scrollHeight-innerHeight;}
   $('reading-progress').style.transform=`scaleX(${progressTotal>0?Math.min(1,Math.max(0,scrollY/progressTotal)):0})`;
 }
 function queueMeasure() {
-  if(measureQueued)return;
-  measureQueued=true;
-  requestAnimationFrame(()=>{measureQueued=false;measureProgress();updateReadingProgress();});
+  progressStale=true;
+  if(scrollY>0&&!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateReadingProgress);}
 }
 addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateReadingProgress);}},{passive:true});
 addEventListener('resize',queueMeasure);
 if('ResizeObserver' in window)new ResizeObserver(queueMeasure).observe(document.body);
-// Le ResizeObserver mesure après la première mise en page ; une lecture forcée ici retarderait le premier affichage.
-if(!('ResizeObserver' in window)){measureProgress();updateReadingProgress();}
 
 // Active chapter follows both chapter buttons and the native playback controls.
 function updateActiveChapter() {
