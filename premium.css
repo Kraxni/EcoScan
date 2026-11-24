@@ -97,6 +97,7 @@ header nav a:hover{background:rgba(15,42,28,.08)}
 /* ───────────── Bandeau défilant ───────────── */
 .marquee{overflow:hidden;padding:18px 0;border-block:1px solid var(--line);color:var(--leaf-deep)}
 .marquee-track{display:flex;width:max-content;gap:34px;align-items:center;animation:marquee 38s linear infinite;font-size:clamp(1.5rem,3vw,2.6rem);font-weight:650;letter-spacing:-.03em;white-space:nowrap;padding-left:34px}
+.marquee.is-paused .marquee-track{animation-play-state:paused}
 .marquee-track i{font-style:normal;font-size:1rem;opacity:.5}
 @keyframes marquee{to{transform:translateX(-50%)}}
 
@@ -145,9 +146,12 @@ main .story-head h2{max-width:18ch;margin-inline:auto}
 .manifesto-note{display:block;margin:2.2rem auto 0;text-align:center;font-size:.9rem;color:var(--muted)}
 
 /* ───────────── Le trajet d'un geste ───────────── */
-.story{padding-bottom:clamp(60px,8vw,120px);overflow:clip}
-.story-pin{min-height:100svh;display:flex;flex-direction:column;justify-content:center;margin-top:clamp(20px,4vw,60px)}
-.story-stage{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(24px,5vw,90px);align-items:center;width:100%}
+.story{padding-bottom:clamp(60px,8vw,120px)}
+/* Épinglage en CSS : la scène reste collée (sticky) pendant que la page défile dans la piste de 3 écrans. Aucun JavaScript de pinning. */
+.story-pin{position:relative;height:calc(100svh * 3.2);margin-top:clamp(20px,4vw,60px)}
+.story-stage{position:sticky;top:var(--header-h);min-height:calc(100svh - var(--header-h));display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(24px,5vw,90px);align-items:center;width:100%}
+.story-pin.is-static,html:not(.js) .story-pin{height:auto;margin-top:clamp(20px,4vw,60px)}
+.story-pin.is-static .story-stage,html:not(.js) .story-stage{position:static;min-height:0}
 .story-side{display:flex;flex-direction:column;gap:clamp(18px,2.4vw,34px)}
 .story-picker{display:flex;flex-wrap:wrap;gap:8px}
 .story-picker button{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:9px 18px 9px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font-size:.95rem;font-weight:600;transition:background .3s,color .3s,border-color .3s}
@@ -263,8 +267,8 @@ footer{background:transparent;color:var(--ink);padding:clamp(80px,11vw,160px) va
 @media(min-width:861px){.header-cta{display:inline-flex}}
 @media(max-width:1000px){.story-stage{grid-template-columns:1fr;gap:20px}}
 @media(max-width:860px){
-  .story-pin{justify-content:flex-start;padding-top:64px}
-  .story-stage{display:flex;flex-direction:column-reverse;gap:10px}
+  .story-pin{height:calc(100svh * 2.6)}
+  .story-stage{display:flex;flex-direction:column-reverse;justify-content:flex-start;gap:10px;padding-top:10px}
   .story-visual svg{max-height:36svh}
   .story-steps button{padding:10px 2px;grid-template-columns:2.4rem 1fr}
   .story-steps strong{font-size:1.15rem}

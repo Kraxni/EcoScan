@@ -26,7 +26,7 @@ Sur votre propre ordinateur, consultez `http://localhost:8000`. Dans Codex, le s
 | `site.min.css` | **Fichier chargé par la page** : assemblage minifié de `styles.css`, `product.css`, `experience-*.css` et `premium.css`. À régénérer avec `python3 tools/build_site.py` après toute modification d'un CSS ; le script met aussi à jour les numéros de version des scripts dans `index.html` |
 | `product.css` | Direction visuelle précédente : hero, simulation, laboratoire, marque |
 | `premium.css` / `premium.js` | Direction artistique « matière vivante » (chargée en dernier) : typographie, hero, trajet interactif, transitions, mouvement |
-| `assets/fonts/`, `assets/vendor/` | Police Inter, feuillage SVG, bibliothèques GSAP et ScrollTrigger hébergées localement (`lenis.min.js` n'est plus chargé) |
+| `assets/fonts/`, `assets/vendor/` | Police Inter, feuillage SVG et GSAP hébergés localement (`lenis.min.js` et `ScrollTrigger.min.js` ne sont plus chargés ; les fichiers restent dans le dépôt) |
 | `script.js` | Session fictive, objets, dépôt, points, quiz, niveaux, vidéo et calculateur |
 | `product.js` | Protocoles téléchargeables et reçu de dépôt |
 | `experience-navigation.js` / `.css` | Cinq parcours, ancres, historique, focus et transitions |
@@ -55,7 +55,7 @@ Vous pouvez demander à Codex : « Modifie EcoScan pour …, teste sur mobile et
 Direction « innovation, version nature » (voir `DESIGN.md`) : un seul fond vert clair avec feuillage en filigrane, titres centrés façon page produit, tuiles blanches, vert d'action `#1a7f4b`. Typographie : pile système (SF Pro sur Apple) avec Inter hébergée en secours : aucune requête distante.
 
 - **Hero** : titre centré, visuel produit plein cadre incliné en 3D au pointeur, boutons magnétiques.
-- **Le trajet d'un geste (`#trajet`)** : explication interactive épinglée, pilotée par le défilement (GSAP + ScrollTrigger). On choisit un objet (bouteille, canette, papier, incertain) ; chaque étape — connexion, dépôt, observation, aiguillage, confirmation — s'anime. L'objet incertain suit la voie de contrôle et ne rapporte aucun point. Les étapes sont aussi cliquables et lisibles sans JavaScript. Ce parcours complète le film, qui reste disponible.
+- **Le trajet d'un geste (`#trajet`)** : explication interactive épinglée en CSS (`position: sticky`, aucun JavaScript de pinning) et pilotée par le défilement : un seul écouteur passif regroupé par image, actif seulement quand le bloc est à l'écran (GSAP pour la timeline). On choisit un objet (bouteille, canette, papier, incertain) ; chaque étape — connexion, dépôt, observation, aiguillage, confirmation — s'anime. L'objet incertain suit la voie de contrôle et ne rapporte aucun point. Les étapes sont aussi cliquables et lisibles sans JavaScript. Ce parcours complète le film, qui reste disponible.
 - **Défilement natif** (aucune surcouche de lissage, ce qui évite les saccades sur Safari). Révélations de titres mot à mot, manifeste qui s'éclaire au défilement, compteurs, rideau de transition entre parcours.
 - **Animations réduites** (`prefers-reduced-motion`) : pas de pinning, de découpage de mots ni de rideau ; le trajet devient un schéma statique interactif au clic.
 - Licences : GSAP (licence standard GreenSock, usage gratuit), police Inter (SIL OFL 1.1). Les fichiers vendorisés sont dans `assets/vendor/` et `assets/fonts/`.

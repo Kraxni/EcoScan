@@ -1,13 +1,15 @@
 'use strict';
 /*
- * Couche de mouvement d'EcoScan : récit au défilement (GSAP + ScrollTrigger),
- * boutons magnétiques, transitions entre parcours. Tout se dégrade proprement : sans JavaScript,
- * avec « réduire les animations » ou si les bibliothèques ne se chargent pas, le contenu reste lisible.
- * Le travail non essentiel est reporté à un moment de repos du navigateur pour protéger le premier affichage.
+ * Couche de mouvement d'EcoScan. Principe : pendant le défilement, le navigateur fait le travail.
+ *  - le récit « trajet d'un objet » est épinglé en CSS (position: sticky), sans JavaScript de pinning ;
+ *  - un seul écouteur de défilement passif, regroupé par image (requestAnimationFrame), actif seulement
+ *    quand le bloc concerné est à l'écran ;
+ *  - aucune lecture de mise en page répétée, aucune surcouche de défilement.
+ * Sans JavaScript, avec « réduire les animations » ou si GSAP ne charge pas, tout le contenu reste lisible.
  */
 (() => {
   const root = document.documentElement;
-  const hasGSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+  const hasGSAP = typeof gsap !== 'undefined';
   const mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
   const reduced = () => mqReduce.matches;
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -18,20 +20,32 @@
 
   root.classList.add('js');
   if (!hasGSAP) { $('#story-pin')?.classList.add('is-static'); return; }
-  gsap.registerPlugin(ScrollTrigger);
-  ScrollTrigger.config({ ignoreMobileResize: true });
   if (!reduced()) root.classList.add('fx');
 
-  /* ───────────── Défilement fluide (pointeur fin uniquement : le tactile reste natif) ───────────── */
-  /* Le défilement reste natif : le navigateur gère l'inertie bien mieux qu'une surcouche (Safari en particulier). */
+  const header = $('header');
+  const headerHeight = () => (header ? header.offsetHeight : 52);
+
+  /* Défilement : natif. Les clics sur une étape font un défilement doux natif. */
   const scrollToY = y => scrollTo({ top: y, behavior: reduced() ? 'auto' : 'smooth' });
 
-  /* ───────────── En-tête : fond renforcé après un peu de défilement ───────────── */
-  const header = $('header');
-  let headerTicking = false;
-  const onScrollHeader = () => { headerTicking = false; header?.classList.toggle('is-scrolled', scrollY > 24); };
-  addEventListener('scroll', () => { if (!headerTicking) { headerTicking = true; requestAnimationFrame(onScrollHeader); } }, { passive: true });
-  onScrollHeader();
+  /* ───────────── Un seul écouteur de défilement, regroupé par image ───────────── */
+  const scrollTasks = [];
+  let scrollQueued = false;
+  const runScrollTasks = () => { scrollQueued = false; for (const t of scrollTasks) t(); };
+  addEventListener('scroll', () => { if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(runScrollTasks); } }, { passive: true });
+  /* Un bloc ne travaille que lorsqu'il est visible. */
+  const whenNear = (el, fn, margin = '120px') => {
+    let near = false;
+    const task = () => { if (near) fn(); };
+    scrollTasks.push(task);
+    if (!('IntersectionObserver' in window)) { near = true; return; }
+    new IntersectionObserver(([e]) => { near = e.isIntersecting; if (near) fn(); }, { rootMargin: `${margin} 0px ${margin} 0px` }).observe(el);
+  };
+
+  /* En-tête : fond renforcé après un peu de défilement (une seule écriture de classe) */
+  let scrolledState = false;
+  scrollTasks.push(() => { const s = scrollY > 24; if (s !== scrolledState) { scrolledState = s; header?.classList.toggle('is-scrolled', s); } });
+  header?.classList.toggle('is-scrolled', scrollY > 24);
 
   /* ───────────── Arrivée du hero : texte seulement. L'image (LCP) n'est jamais masquée. ───────────── */
   const hero = $('#accueil');
@@ -49,7 +63,6 @@
   document.body.append(curtain);
   const labels = { discover: 'Découvrir', try: 'Essayer', build: 'Construire', mission: 'Mission', resources: 'Ressources' };
   document.addEventListener('ecoscan:viewchange', e => {
-    /* Le script de navigation envoie déjà un « resize » : ScrollTrigger se recalcule une seule fois. */
     const { group, previous } = e.detail || {};
     if (!group || group === previous || reduced()) return;
     $('.curtain-label', curtain).textContent = labels[group] || '';
@@ -58,14 +71,12 @@
     gsap.fromTo('.curtain-label', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'expo.out' });
     gsap.to(curtain, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.75, delay: 0.38, ease: 'expo.inOut', onComplete: () => gsap.set(curtain, { display: 'none' }) });
   });
-  addEventListener('load', () => ScrollTrigger.refresh());
 
-  /* ───────────── Trajet d'un objet : récit épinglé ───────────── */
+  /* ───────────── Trajet d'un objet : récit épinglé en CSS ───────────── */
   initStory();
 
   /* ───────────── Le reste, au repos du navigateur ───────────── */
   idle(() => {
-    /* Titres révélés mot à mot : seulement les grandes ouvertures de section. */
     const splitTargets = $$('#promesse h2, #station h2, #video-explicative h2, #trajet h2, #demo h2, #mission h2, #vision-monde h2, #impact h2, #participer h2');
     const splitWords = el => {
       if (el.dataset.split) return $$('.wi', el);
@@ -112,10 +123,24 @@
     /* Manifeste : les mots s'éclairent au défilement (départ à 55 % pour rester lisible) */
     const manifesto = $('[data-scrub-words]');
     if (manifesto && !reduced()) {
-      const words = splitWords(manifesto);
+      const words = splitWords(manifesto), n = words.length;
       manifesto.classList.add('scrub-ready');
-      gsap.set(words, { opacity: 0.55 });
-      gsap.to(words, { opacity: 1, ease: 'none', stagger: 0.5, scrollTrigger: { trigger: manifesto, start: 'top 82%', end: 'bottom 48%', scrub: 0.6 } });
+      let last = -1;
+      const paint = () => {
+        const r = manifesto.getBoundingClientRect(), vh = innerHeight;
+        const p = clamp((vh * 0.82 - r.top) / (vh * 0.34 + r.height), 0, 1);
+        if (Math.abs(p - last) < 0.002) return;
+        last = p;
+        for (let i = 0; i < n; i++) words[i].style.opacity = (0.55 + 0.45 * clamp((p - (i / n) * 0.85) / 0.15, 0, 1)).toFixed(3);
+      };
+      words.forEach(w => { w.style.opacity = '0.55'; });
+      whenNear(manifesto, paint);
+    }
+
+    /* Le bandeau défilant ne tourne que lorsqu'il est visible */
+    const marquee = $('.marquee');
+    if (marquee && 'IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => marquee.classList.toggle('is-paused', !e.isIntersecting)).observe(marquee);
     }
 
     /* Pointeur fin : produit incliné en 3D, boutons magnétiques */
@@ -141,11 +166,11 @@
         btn.addEventListener('pointerleave', () => { mx(0); my(0); });
       });
     }
-    ScrollTrigger.refresh();
   });
 
   function initStory() {
     const pin = $('#story-pin'); if (!pin) return;
+    const stage = $('.story-stage', pin);
     const svg = $('#story-svg');
     const stepsEl = $$('#story-steps li');
     const picker = $$('.story-picker button');
@@ -159,8 +184,9 @@
       paper: { name: 'Papier propre', bin: 'paper', x: 402, angle: 30, pts: 10, route: 'Les plaques basculent vers la voie papier.', confirm: 'Les points n’arrivent qu’après confirmation du passage : +10 EcoPoints fictifs dans la démo.', toast: '+10 · passage confirmé' },
       cup:   { name: 'Gobelet · doute', bin: null, x: 82, angle: 0, pts: 0, route: 'Un doute reste un doute : l’objet part vers la voie de contrôle isolée, jamais dans un bac de matière.', confirm: 'Aucun point : un objet incertain n’est pas crédité. Un humain tranchera à la collecte.', toast: '0 point · contrôle requis' }
     };
-    let kind = 'pet', tl = null, progress = 0, st = null, activeStep = -1;
+    let kind = 'pet', tl = null, progress = 0, activeStep = -1;
     const NS = 5;
+    const tracking = !reduced();
 
     function build() {
       const k = kinds[kind];
@@ -234,21 +260,25 @@
         const b = $('button', li); if (i === idx) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       });
     }
-    function apply(p, instant) {
+    /* Applique un avancement : directement sur la timeline, sans interpolation supplémentaire (réponse immédiate) */
+    function apply(p) {
       progress = clamp(p, 0, 1);
       bar.style.transform = `scaleX(${progress})`;
       setStepUI(progress);
-      if (!tl) return;
-      if (instant || reduced()) tl.progress(progress);
-      else gsap.to(tl, { progress, duration: 0.45, ease: 'power2.out', overwrite: true });
+      if (tl) tl.progress(progress);
     }
+
+    /* Mesures mises en cache, recalculées seulement si la taille change */
+    let distance = 1;
+    const measure = () => { distance = Math.max(1, pin.offsetHeight - stage.offsetHeight); };
+    const fromScroll = () => apply((headerHeight() - pin.getBoundingClientRect().top) / distance);
 
     picker.forEach(btn => btn.addEventListener('click', () => {
       if (btn.dataset.kind === kind) return;
       kind = btn.dataset.kind;
       picker.forEach(b => b.setAttribute('aria-checked', String(b === btn)));
       build();
-      if (!st) apply(Math.max(progress, 0.9), true);
+      if (tracking) fromScroll(); else apply(Math.max(progress, 0.9));
     }));
     /* flèches du clavier dans le groupe de choix */
     $('.story-picker').addEventListener('keydown', e => {
@@ -258,27 +288,21 @@
       const n = picker[(i + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : picker.length - 1)) % picker.length];
       n.focus(); n.click();
     });
-
     stepsEl.forEach((li, i) => $('button', li).addEventListener('click', () => {
       const target = (i + 0.5) / NS;
-      if (st) scrollToY(st.start + target * (st.end - st.start));
-      else apply(target, true);
+      if (tracking) {
+        measure();
+        scrollToY(pin.getBoundingClientRect().top + scrollY - headerHeight() + target * distance);
+      } else apply(target);
     }));
 
     build();
-    if (reduced()) { apply(0.9, true); pin.classList.add('is-static'); return; }
+    if (!tracking) { apply(0.9); pin.classList.add('is-static'); return; }
 
-    const mm = gsap.matchMedia();
-    mm.add({ wide: '(min-width: 861px)', narrow: '(max-width: 860px)' }, ctx => {
-      const wide = ctx.conditions.wide;
-      st = ScrollTrigger.create({
-        trigger: pin, start: 'top top', end: () => '+=' + Math.round(innerHeight * (wide ? 4.2 : 3.4)),
-        pin: true, anticipatePin: 1, invalidateOnRefresh: true,
-        onUpdate: self => apply(self.progress)
-      });
-      apply(st.progress, true);
-      return () => { st && st.kill(); st = null; };
-    });
-    apply(0, true);
+    measure();
+    apply(0);
+    whenNear(pin, fromScroll, '200px');
+    if ('ResizeObserver' in window) new ResizeObserver(() => { measure(); fromScroll(); }).observe(pin);
+    addEventListener('resize', () => { measure(); fromScroll(); }, { passive: true });
   }
 })();
