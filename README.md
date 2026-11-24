@@ -144,6 +144,7 @@ node tests/workspace.cjs
 node tests/shop.cjs
 node tests/ergonomics.cjs
 node tests/premium.cjs
+node tests/app.cjs
 ```
 
 Pour vérifier le chemin de publication, servir le parent du dépôt puis cibler `/EcoScan` :
@@ -162,3 +163,12 @@ Avant de publier : vérifier les liens et images, tester le menu mobile, le quiz
 ### Images de la station (assets/station)
 
 Six vues 3D entières, détourées, avec ombre douce intégrée : `FILM_SET=stills FILM_ENGINE=CYCLES FILM_SAMPLES=48 FILM_W=1000 FILM_H=1000 python tools/render_film_v2_scene.py` (Blender via `pip install bpy`, sur processeur, environ 1 min 40 par image), puis `python tools/build_station_stills.py` pour produire les WebP (480, 800 et 1000 px). Concept visuel, pas un modèle d'ingénierie.
+
+## Application mobile (`app/`)
+
+Version installable (PWA) de l'app envisagée, servie par le même hébergement gratuit : <https://trueballknower.github.io/EcoScan/app/>. Sur iPhone : Partager, puis « Sur l'écran d'accueil » ; sur Android, bouton « Installer ». Elle fonctionne aussi sans connexion (service worker `app/sw.js`).
+
+Tout est simulé, comme sur le site : pas de caméra (le scan est une illustration), pas de compte, pas de serveur, aucun point réel. Écrans : Accueil, Station (scanner, session, dépôt, résultat), Portefeuille, Boutique (trois concepts, échanges fictifs), Apprendre (quiz). Règles identiques à la démonstration du site : 10 points par objet reconnu, 30 pour un mélange, rien si le doute persiste, dépôt bloqué si un compartiment simulé est plein. Le solde est enregistré sous la même clé (`ecoscan-demo-points`) que le site, donc partagé sur le même appareil.
+
+Maquette : fichier Figma « EcoScan » (variables de couleur, composants, 7 écrans de 390 x 844). Code : `app/index.html`, `app/app.css`, `app/app.js`, `app/data.js` (textes repris du site), `app/manifest.webmanifest`, `app/sw.js`. Test : `node tests/app.cjs`.
+

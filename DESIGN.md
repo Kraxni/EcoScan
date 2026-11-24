@@ -40,3 +40,7 @@ Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteu
 
 Moins de pile verticale : texte et image côte à côte, en alternant les côtés (promesse, concept, architecture, fonctionnement, technologies, exploitation), film et vue en coupe installés à côté de leurs réglages, cartes en rangée (le panneau sombre de l'architecture et ses deux cartes), l'image de la station reste en vue pendant la lecture des étapes (sticky). En dessous de 1100 px, tout s'empile comme avant.
 
+## Application mobile
+
+Même système visuel que le site (fond vert, panneaux sombres pour le solde, vert d'action, Inter), pensé pour le pouce : barre d'onglets en bas, cibles de 44 px, un écran par idée, zones sûres de l'iPhone respectées. Chaque écran dit ce qui est simulé ; aucun point n'est réel. Le mouvement est discret et disparaît avec « réduire les animations ».
+

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EcoScan · Application</title>
+<meta name="description" content="Application de démonstration EcoScan : scanner une station simulée, déposer un objet et suivre ses EcoPoints fictifs. Aucun compte, aucune caméra, aucun point réel.">
+<meta name="theme-color" content="#e6f0df">
+<meta name="color-scheme" content="light">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="EcoScan">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/icon-180.png">
+<link rel="preload" href="../assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<main id="main">
+
+  <!-- Accueil -->
+  <section class="screen" data-screen="home" aria-labelledby="t-home" hidden>
+    <span class="badge"><i aria-hidden="true"></i>Concept simulé</span>
+    <h1 id="t-home" tabindex="-1">Un seul geste.<br>Un nouveau cycle.</h1>
+    <div class="balance">
+      <p class="label">Votre solde local</p>
+      <p class="value"><b id="home-points">0</b><span>EcoPoints fictifs</span></p>
+      <p class="small">Aucun point réel. Enregistré uniquement sur cet appareil, et partagé avec le site EcoScan ouvert ici.</p>
+    </div>
+    <button class="btn primary" type="button" id="home-scan" data-go="station">Scanner une station</button>
+    <h2>Dernières activités</h2>
+    <div class="card" id="home-activity"></div>
+    <div class="tip">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14z"/><path d="M5 19c3-5 6-8 10-10"/></svg>
+      <p>Réduire d’abord, trier ensuite. Le meilleur déchet est celui qu’on ne produit pas.</p>
+    </div>
+    <div class="card install" id="install" hidden>
+      <p class="strong">Installer l’application</p>
+      <p class="small" id="install-text">Ajoutez EcoScan à votre écran d’accueil : elle fonctionne aussi sans connexion.</p>
+      <button class="btn secondary" type="button" id="install-btn" hidden>Installer</button>
+    </div>
+  </section>
+
+  <!-- Station : scanner, déposer, résultat -->
+  <section class="screen" data-screen="station" aria-labelledby="t-station" hidden>
+    <div data-view="scan">
+      <h1 id="t-station" tabindex="-1">Scanner la station</h1>
+      <p class="lead">Visez le QR code de la poubelle ÉcoNova pour ouvrir une session.</p>
+      <div class="viewfinder" role="img" aria-label="Aperçu simulé d’un QR code. Aucune caméra n’est utilisée.">
+        <svg viewBox="0 0 350 350" aria-hidden="true">
+          <g fill="#6fe0a0"><rect x="28" y="28" width="36" height="4" rx="2"/><rect x="28" y="28" width="4" height="36" rx="2"/>
+            <rect x="286" y="28" width="36" height="4" rx="2"/><rect x="318" y="28" width="4" height="36" rx="2"/>
+            <rect x="28" y="318" width="36" height="4" rx="2"/><rect x="28" y="286" width="4" height="36" rx="2"/>
+            <rect x="286" y="318" width="36" height="4" rx="2"/><rect x="318" y="286" width="4" height="36" rx="2"/></g>
+          <g fill="#fff"><rect x="100" y="100" width="70" height="70" rx="8"/><rect x="190" y="100" width="70" height="70" rx="8"/><rect x="100" y="190" width="70" height="70" rx="8"/></g>
+          <g fill="#0b2a1b"><rect x="112" y="112" width="46" height="46" rx="4"/><rect x="202" y="112" width="46" height="46" rx="4"/><rect x="112" y="202" width="46" height="46" rx="4"/></g>
+          <g fill="#fff"><rect x="122" y="122" width="26" height="26" rx="3"/><rect x="212" y="122" width="26" height="26" rx="3"/><rect x="122" y="212" width="26" height="26" rx="3"/></g>
+          <g fill="#6fe0a0"><rect x="204" y="204" width="14" height="14" rx="3"/><rect x="232" y="204" width="14" height="14" rx="3"/><rect x="260" y="232" width="14" height="14" rx="3"/><rect x="204" y="246" width="14" height="14" rx="3"/><rect x="246" y="246" width="14" height="14" rx="3"/><rect x="232" y="260" width="14" height="14" rx="3"/><rect x="260" y="204" width="14" height="14" rx="3"/></g>
+          <rect class="scanline" x="40" y="60" width="270" height="3" rx="1.5" fill="#6fe0a0" opacity=".55"/>
+        </svg>
+      </div>
+      <p class="small center">Aperçu simulé : aucune caméra n’est utilisée.</p>
+      <button class="btn primary" type="button" id="scan-sim">Simuler le scan</button>
+      <button class="btn secondary" type="button" id="scan-manual" aria-expanded="false" aria-controls="manual">Saisir l’identifiant ECO-001</button>
+      <form id="manual" hidden novalidate>
+        <label for="station-id">Identifiant de la station</label>
+        <input id="station-id" name="station" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ECO-001" maxlength="12">
+        <button class="btn primary" type="submit">Ouvrir la session</button>
+        <p class="small" id="manual-status" role="status"></p>
+      </form>
+    </div>
+
+    <div data-view="session" hidden>
+      <p class="live"><i aria-hidden="true"></i>Session ouverte · simulée</p>
+      <h1 id="t-session" tabindex="-1">Station ECO-001</h1>
+      <div class="card">
+        <p class="label dark">Remplissage simulé des compartiments</p>
+        <div class="bins" id="bins"></div>
+        <button class="link" type="button" id="collect">Simuler la collecte</button>
+      </div>
+      <fieldset class="objects" id="objects">
+        <legend>Que déposez-vous ?</legend>
+      </fieldset>
+      <ol class="steps" id="deposit-steps" aria-live="polite" aria-label="Étapes du dépôt simulé" hidden></ol>
+      <button class="btn primary" type="button" id="deposit">Déposer l’objet</button>
+      <button class="btn secondary" type="button" id="close-session">Fermer la session</button>
+    </div>
+
+    <div data-view="result" class="result" data-state="confirmed" hidden>
+      <div class="seal" id="seal" aria-hidden="true"></div>
+      <h1 id="t-result" tabindex="-1">Dépôt confirmé</h1>
+      <p class="gain" id="result-gain">+10 EcoPoints fictifs</p>
+      <div class="card">
+        <p class="strong" id="result-route"></p>
+        <ol class="done" id="result-steps"></ol>
+      </div>
+      <p class="small center" id="result-note"></p>
+      <button class="btn primary" type="button" data-go="wallet">Voir mes points</button>
+      <button class="btn secondary" type="button" id="again">Nouveau dépôt</button>
+    </div>
+  </section>
+
+  <!-- Portefeuille -->
+  <section class="screen" data-screen="wallet" aria-labelledby="t-wallet" hidden>
+    <h1 id="t-wallet" tabindex="-1">Portefeuille</h1>
+    <div class="balance">
+      <p class="label">Solde local</p>
+      <p class="value big"><b id="wallet-points">0</b><span>EcoPoints fictifs</span></p>
+      <ul class="chips-dark"><li id="wallet-count">0 dépôt simulé</li><li>Aucun point réel</li></ul>
+    </div>
+    <h2>Historique</h2>
+    <ul class="history" id="history"></ul>
+    <p class="small">Les points sont fictifs et restent sur cet appareil. Ils ne donnent droit à aucune récompense réelle.</p>
+    <button class="btn secondary" type="button" id="reset">Remettre le solde à zéro</button>
+    <p class="small" id="reset-status" role="status"></p>
+  </section>
+
+  <!-- Boutique -->
+  <section class="screen" data-screen="shop" aria-labelledby="t-shop" hidden>
+    <h1 id="t-shop" tabindex="-1">Trois objets utiles</h1>
+    <p class="lead">À obtenir avec vos points fictifs. Visuels de concept.</p>
+    <div class="filters" role="group" aria-label="Filtrer les objets">
+      <button class="chip" type="button" data-filter="all" aria-pressed="true">Tout découvrir</button>
+      <button class="chip" type="button" data-filter="reuse" aria-pressed="false">Réutiliser</button>
+      <button class="chip" type="button" data-filter="daily" aria-pressed="false">Au quotidien</button>
+    </div>
+    <p class="small" id="shop-count" role="status"></p>
+    <ul class="products" id="products"></ul>
+    <p class="small center">Catalogue de pistes : aucun achat, aucun paiement, aucune livraison.</p>
+  </section>
+
+  <!-- Apprendre -->
+  <section class="screen" data-screen="learn" aria-labelledby="t-learn" hidden>
+    <h1 id="t-learn" tabindex="-1">Apprendre en 1 minute</h1>
+    <p class="lead">Distinguez les bons réflexes des raccourcis.</p>
+    <div class="progress"><p class="small strong" id="quiz-progress">Question 1 / 5</p><div class="gauge" aria-hidden="true"><span id="quiz-bar"></span></div></div>
+    <div class="card quiz">
+      <h2 id="quiz-question" class="qtext"></h2>
+      <div id="quiz-answers" class="answers"></div>
+      <p id="quiz-feedback" class="feedback" role="status"></p>
+      <button class="btn primary" type="button" id="quiz-next" hidden>Question suivante</button>
+      <button class="btn secondary" type="button" id="quiz-restart" hidden>Recommencer</button>
+    </div>
+    <p class="small center">Aucune réponse n’est envoyée ni enregistrée.</p>
+  </section>
+
+</main>
+
+<nav class="tabbar" aria-label="Navigation principale">
+  <ul>
+    <li><button type="button" data-go="home"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Accueil</span></button></li>
+    <li><button type="button" data-go="station"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 12h8"/></svg><span>Station</span></button></li>
+    <li><button type="button" data-go="wallet"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16" cy="14" r="1.2"/></svg><span>Points</span></button></li>
+    <li><button type="button" data-go="shop"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 12H5z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg><span>Boutique</span></button></li>
+    <li><button type="button" data-go="learn"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14z"/><path d="M5 19c3-5 6-8 10-10"/></svg><span>Apprendre</span></button></li>
+  </ul>
+</nav>
+
+<dialog id="shop-dialog" aria-labelledby="dialog-title">
+  <form method="dialog">
+    <h2 id="dialog-title">Objet</h2>
+    <p id="dialog-use"></p>
+    <dl>
+      <dt>Matière</dt><dd id="dialog-material"></dd>
+      <dt>À vérifier</dt><dd id="dialog-validation"></dd>
+    </dl>
+    <p class="strong" id="dialog-cost"></p>
+    <p class="small" id="dialog-status" role="status"></p>
+    <div class="dialog-actions">
+      <button class="btn primary" type="button" id="dialog-confirm">Échanger</button>
+      <button class="btn secondary" value="close">Fermer</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
