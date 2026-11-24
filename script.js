@@ -360,14 +360,23 @@ document.querySelectorAll('[data-film-language]').forEach(button=>button.addEven
   if(!started)$('video-status').textContent='Narration sélectionnée. Appuyez sur lecture pour regarder le film.';
 }));
 
-let scrollScheduled=false;
+// Reading progress: the page height is measured only when it can change (resize, content growth),
+// never on every scroll frame, to avoid forced layouts.
+let scrollScheduled=false,progressTotal=0,measureQueued=false;
+function measureProgress() {progressTotal=document.documentElement.scrollHeight-innerHeight;}
 function updateReadingProgress() {
   scrollScheduled=false;
-  const total=document.documentElement.scrollHeight-innerHeight;
-  $('reading-progress').style.transform=`scaleX(${total>0?Math.min(1,Math.max(0,scrollY/total)):0})`;
+  $('reading-progress').style.transform=`scaleX(${progressTotal>0?Math.min(1,Math.max(0,scrollY/progressTotal)):0})`;
+}
+function queueMeasure() {
+  if(measureQueued)return;
+  measureQueued=true;
+  requestAnimationFrame(()=>{measureQueued=false;measureProgress();updateReadingProgress();});
 }
 addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateReadingProgress);}},{passive:true});
-addEventListener('resize',updateReadingProgress);updateReadingProgress();
+addEventListener('resize',queueMeasure);
+if('ResizeObserver' in window)new ResizeObserver(queueMeasure).observe(document.body);
+measureProgress();updateReadingProgress();
 
 // Active chapter follows both chapter buttons and the native playback controls.
 function updateActiveChapter() {
