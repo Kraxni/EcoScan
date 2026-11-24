@@ -1,31 +1,27 @@
-# EcoScan — parti pris visuel
+# EcoScan — direction visuelle
 
-**Planche de laboratoire imprimée.** Un site qui ressemble à un cahier d'essais bien composé : papier d'os, encre presque noire, filets d'un pixel, numérotation, un seul accent vif. Pas de lumière décorative, pas de verre dépoli, pas d'ombres molles. La profondeur vient du contraste franc entre surfaces (papier / nuit) et de l'échelle typographique.
+**Innovation, version nature.** Une page produit à la manière d'Apple ou de SpaceX — grands titres centrés, un visuel produit plein cadre, beaucoup d'air — posée sur **un seul fond vert clair** et un feuillage en filigrane. Le site doit donner l'impression d'un projet pour améliorer la vie, pas d'un laboratoire.
 
-## Tokens (voir `:root` dans `premium.css`)
+## Tokens (voir la fin de `premium.css`)
 
-| Rôle | Valeur | Usage |
-| --- | --- | --- |
-| Nuit | `#08150f` | Surfaces sombres, texte sur papier |
-| Papier | `#efeadc` / `#e5dfcc` | Fond principal, fond alterné |
-| Signal | `#c9f24b` | Le scan, l'action, le chiffre à retenir. Un seul accent. |
-| Ambre | `#e8923a` | Le doute, la voie de contrôle. Jamais décoratif. |
-| Filet | `1px solid` encre à 16 % | Séparer, structurer. Remplace cartes et ombres. |
-
-Rayons : 3 à 4 px partout (angles nets). Pas de pilules, sauf le sélecteur d'objet du trajet où la forme de bouton compte.
+| Rôle | Valeur |
+| --- | --- |
+| Fond de page (partout) | `#e6f0df` + feuillage `assets/leaves-light.svg` fixe en filigrane |
+| Encre | `#0f2a1c` |
+| Texte secondaire | `#456252` |
+| Tuiles | `#ffffff`, rayon 20 px, sans bordure |
+| Vert d'action | `#1a7f4b` (hover `#136a3d`) |
+| Vert clair (sur panneaux sombres) | `#6fe0a0` |
+| Panneaux sombres | `#0b2a1b` : uniquement la scène du trajet, le téléphone de démonstration et le lecteur vidéo |
 
 ## Typographie
 
-- **Fraunces** (serif éditoriale à axe optique) pour les titres : très grands (jusqu'à ~9 rem) face à un corps de 17 px.
-- **Instrument Sans** pour le texte courant.
-- **JetBrains Mono** pour les repères techniques, étiquettes et numéros.
+Pile système : **SF Pro** sur Apple, **Inter** (hébergée dans `assets/fonts/`) ailleurs. Titres en graisse 650–700, interlettrage serré (−0,035 à −0,05 em), corps à 18 px.
 
 ## Règles
 
-1. Aucun dégradé décoratif, aucun texte en dégradé, aucun halo lumineux, aucun `backdrop-filter`.
-2. Pas de sur-titre au-dessus de chaque H2 : les sur-titres restent dans le HTML (lecteurs d'écran) mais sont masqués visuellement, hors hero.
-3. Pas de rangée de trois cartes identiques : les colonnes sont asymétriques et décalées en escalier.
-4. Pas de faux dashboard dans le hero : l'image est l'étude réelle du concept.
-5. Titres courts, concrets, factuels. Bannis : « révolutionner », « tout-en-un », « propulsé par », « sans effort ».
-6. Mouvement au service du sens (le trajet d'un objet, le scan), jamais en fond d'écran.
-7. Chaque changement d'interface est inspecté en capture avant validation : on cherche et on retire les réflexes génériques.
+1. Un seul fond. Pas d'alternance clair/sombre entre sections.
+2. Titres et chapôs centrés ; une idée par écran.
+3. Un bouton primaire vert, un lien secondaire avec chevron.
+4. Le mouvement explique (trajet d'un objet, défilement fluide), il ne décore pas.
+5. Aucun résultat, partenariat ou équipement présenté comme réel : projet académique, concept.

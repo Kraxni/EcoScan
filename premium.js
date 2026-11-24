@@ -98,7 +98,8 @@
   if (hero && !reduced()) {
     const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
     tl.from('.h1-line > span', { yPercent: 115, rotate: 3, duration: 1.4, stagger: 0.09 }, 0.15)
-      .from('.hero-copy .eyebrow, .hero-description, .hero-actions > *, .hero-tags span, .hero-caption', { y: 24, opacity: 0, duration: 1, stagger: 0.07 }, 0.55)
+      .from('.hero-copy .eyebrow, .hero-description, .hero-tags span, .hero-caption', { y: 24, opacity: 0, duration: 1, stagger: 0.07 }, 0.55)
+      .from('.hero-actions > *', { opacity: 0, duration: 1, stagger: 0.07 }, 0.75)
       .from('.hero-product-frame', { y: 60, opacity: 0, scale: 0.94, duration: 1.5 }, 0.35)
       .from('.hero-product .hot', { scale: 0.6, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'back.out(2)' }, 1.3)
       .from('.hero-product figcaption, .hero-bottom', { opacity: 0, y: 14, duration: 1 }, 1.4);
@@ -219,7 +220,7 @@
       /* 1 — connect */
       tl.to('#sg-link', { strokeDashoffset: 0, strokeDasharray: '1 0.001', duration: 0.7 }, 0.05)
         .fromTo('#sg-ping', { opacity: 1, scale: 0.6 }, { opacity: 0, scale: 3, duration: 0.55, ease: 'power1.out' }, 0.6)
-        .to('#sg-session-dot', { attr: { fill: '#c9f24b' }, duration: 0.15 }, 0.7)
+        .to('#sg-session-dot', { attr: { fill: '#6fe0a0' }, duration: 0.15 }, 0.7)
         .to('#sg-phone', { scale: 1.06, duration: 0.2, yoyo: true, repeat: 1 }, 0.7);
       /* 2 — deposit */
       tl.to(obj, { opacity: 1, y: 64, scale: 1.05, duration: 0.35, ease: 'power1.out' }, 1.0)
@@ -329,7 +330,7 @@
     let w = 0, h = 0, dpr = 1, parts = [], raf = 0, visible = true, t0 = performance.now();
     const pointer = { x: -999, y: -999 };
     const mobile = innerWidth < 760;
-    const COLORS = ['236,231,217', '236,231,217', '236,231,217', '201,242,75', '127,217,239'];
+    const COLORS = ['236,240,233', '236,240,233', '236,240,233', '111,224,160', '111,224,160'];
 
     function resize() {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -357,9 +358,9 @@
       else if (p.type === 2) ctx.roundRect(-s * 0.45, -s * 0.7, s * 0.9, s * 1.4, s * 0.14);
       else { ctx.moveTo(-s * 0.6, -s * 0.5); ctx.lineTo(s * 0.5, -s * 0.6); ctx.lineTo(s * 0.6, s * 0.5); ctx.lineTo(-s * 0.5, s * 0.6); ctx.closePath(); }
       const a = p.a + p.lit * 0.7;
-      ctx.fillStyle = p.lit > 0.05 ? `rgba(201,242,75,${a})` : `rgba(${p.c},${p.a})`;
+      ctx.fillStyle = p.lit > 0.05 ? `rgba(111,224,160,${a})` : `rgba(${p.c},${p.a})`;
       ctx.fill();
-      if (p.lit > 0.05) { ctx.lineWidth = 1; ctx.strokeStyle = `rgba(201,242,75,${p.lit * 0.9})`; ctx.stroke(); }
+      if (p.lit > 0.05) { ctx.lineWidth = 1; ctx.strokeStyle = `rgba(111,224,160,${p.lit * 0.9})`; ctx.stroke(); }
       ctx.restore();
     }
     function frame(now) {
@@ -370,9 +371,9 @@
       const scanY = ((t * 0.12) % 1.3 - 0.15) * h; // light line sweeping top → bottom
       /* scan line */
       const g = ctx.createLinearGradient(0, scanY - 70, 0, scanY + 6);
-      g.addColorStop(0, 'rgba(201,242,75,0)'); g.addColorStop(1, 'rgba(201,242,75,.10)');
+      g.addColorStop(0, 'rgba(111,224,160,0)'); g.addColorStop(1, 'rgba(111,224,160,.10)');
       ctx.fillStyle = g; ctx.fillRect(0, scanY - 70, w, 76);
-      ctx.fillStyle = 'rgba(201,242,75,.35)'; ctx.fillRect(0, scanY, w, 1);
+      ctx.fillStyle = 'rgba(111,224,160,.35)'; ctx.fillRect(0, scanY, w, 1);
       for (const p of parts) {
         p.y += p.vy; p.x += p.vx + Math.sin(t * 0.6 + p.s) * 0.1; p.rot += p.vr;
         const dx = p.x - pointer.x, dy = p.y - pointer.y, d2 = dx * dx + dy * dy;

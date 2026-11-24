@@ -11,7 +11,7 @@ const base=process.env.ECOSCAN_TEST_URL || 'http://127.0.0.1:8000';
  assert.equal(await page.locator('#hero-canvas').count(),1);
  assert.ok(await page.locator('.h1-line>span').first().evaluate(e=>getComputedStyle(e).opacity==='1'));
  assert.equal(await page.locator('h1').getAttribute('aria-label'),'Un seul geste. Un nouveau cycle.');
- const fonts=await page.evaluate(()=>document.fonts.check('16px Fraunces')&&document.fonts.check('16px "Instrument Sans"'));
+ const fonts=await page.evaluate(()=>document.fonts.check('16px Inter'));
  assert.ok(fonts,'self-hosted fonts load');
  const [start,end]=await page.evaluate(()=>{const st=ScrollTrigger.getAll().find(t=>t.pin&&t.pin.id==='story-pin');return [st.start,st.end];});
  assert.ok(end-start>2000,'story is pinned over several screens');
