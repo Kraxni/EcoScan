@@ -162,7 +162,7 @@ main .story-head h2{max-width:18ch;margin-inline:auto}
 html.js .story-steps button{opacity:.8}
 html.js .story-steps li.is-active button,html.js .story-pin.is-static .story-steps button{opacity:1}
 html.js .story-steps li.is-done button{opacity:.82}
-html.js .story-steps small{max-height:0;opacity:0;overflow:hidden;transition:max-height .6s var(--ease),opacity .5s,margin .5s}
+html.js .story-steps small{max-height:0;opacity:0;overflow:hidden;transition:opacity .3s var(--ease)}
 html.js .story-steps li.is-active small,html.js .story-pin.is-static .story-steps small{max-height:9em;opacity:1;margin-top:.5rem}
 .story-visual{position:relative;background:var(--night);border-radius:28px;padding:clamp(14px,2vw,26px)}
 .story-visual svg{display:block;width:100%;height:auto;max-height:calc(100svh - 230px);margin-inline:auto}
@@ -355,3 +355,7 @@ main .section>h2,main .story-head h2{max-width:22ch;text-wrap:balance}
 main .section>.button,main .section>a.button{display:flex;width:fit-content;margin:clamp(24px,3vw,40px) auto 0}
 /* plus d'apparition au défilement sur les blocs : le contenu est là, stable, sans décalage ni saccade */
 .reveal-ready,.reveal-ready.visible,.sequence-card{opacity:1;transform:none;transition:none;animation:none}
+
+/* règles d'interface : pas de délai au toucher, défilement contenu dans les fenêtres */
+a,button,summary,select,label,input,[role=button]{touch-action:manipulation}
+dialog,.eco-shop-dialog{overscroll-behavior:contain}
