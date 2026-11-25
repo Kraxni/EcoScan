@@ -55,14 +55,19 @@
   curtain.innerHTML = '<span class="curtain-mark"></span><strong class="curtain-label"></strong>';
   document.body.append(curtain);
   const labels = { discover: 'Découvrir', try: 'Essayer', build: 'Construire', mission: 'Mission', resources: 'Ressources' };
+  /* Le rideau accompagne un clic ou un toucher (0,5 s en tout). Au clavier, la vue change tout de suite :
+     une action qu'on répète ne s'anime pas. */
+  let keyboardNav = false;
+  addEventListener('keydown', () => { keyboardNav = true; }, true);
+  addEventListener('pointerdown', () => { keyboardNav = false; }, true);
   document.addEventListener('ecoscan:viewchange', e => {
     const { group, previous } = e.detail || {};
-    if (!group || group === previous || reduced()) return;
+    if (!group || group === previous || reduced() || keyboardNav) return;
     $('.curtain-label', curtain).textContent = labels[group] || '';
     gsap.killTweensOf(curtain);
     gsap.set(curtain, { display: 'grid', clipPath: 'inset(0% 0% 0% 0%)' });
-    gsap.fromTo('.curtain-label', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'expo.out' });
-    gsap.to(curtain, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.75, delay: 0.38, ease: 'expo.inOut', onComplete: () => gsap.set(curtain, { display: 'none' }) });
+    gsap.fromTo('.curtain-label', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: 'power3.out' });
+    gsap.to(curtain, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.34, delay: 0.14, ease: 'power3.out', onComplete: () => gsap.set(curtain, { display: 'none' }) });
   });
 
   /* ───────────── Trajet d'un objet : récit épinglé en CSS ───────────── */
@@ -131,16 +136,23 @@
     if (manifesto && !reduced()) {
       const words = splitWords(manifesto), n = words.length;
       manifesto.classList.add('scrub-ready');
-      let last = -1;
-      const paint = () => {
-        const r = manifesto.getBoundingClientRect(), vh = innerHeight;
-        const p = clamp((vh * 0.82 - r.top) / (vh * 0.34 + r.height), 0, 1);
-        if (Math.abs(p - last) < 0.002) return;
-        last = p;
-        for (let i = 0; i < n; i++) words[i].style.opacity = (0.55 + 0.45 * clamp((p - (i / n) * 0.85) / 0.15, 0, 1)).toFixed(3);
-      };
-      words.forEach(w => { w.style.opacity = '0.55'; });
-      whenNear(manifesto, paint);
+      if (CSS.supports('animation-timeline', 'view()')) {
+        /* chronologie de défilement CSS : aucun JavaScript pendant le défilement */
+        words.forEach((w, i) => w.style.setProperty('--k', i));
+        manifesto.classList.add('scrub-css');
+      } else {
+        /* repli : écriture de l'opacité à chaque image, seulement quand le bloc est proche */
+        let last = -1;
+        const paint = () => {
+          const r = manifesto.getBoundingClientRect(), vh = innerHeight;
+          const p = clamp((vh * 0.82 - r.top) / (vh * 0.34 + r.height), 0, 1);
+          if (Math.abs(p - last) < 0.002) return;
+          last = p;
+          for (let i = 0; i < n; i++) words[i].style.opacity = (0.55 + 0.45 * clamp((p - (i / n) * 0.85) / 0.15, 0, 1)).toFixed(3);
+        };
+        words.forEach(w => { w.style.opacity = '0.55'; });
+        whenNear(manifesto, paint);
+      }
     }
 
     /* Le bandeau défilant ne tourne que lorsqu'il est visible */
@@ -149,25 +161,36 @@
       new IntersectionObserver(([e]) => marquee.classList.toggle('is-paused', !e.isIntersecting)).observe(marquee);
     }
 
-    /* Pointeur fin : produit incliné en 3D, boutons magnétiques */
-    if (finePointer && !reduced()) {
+    /* La flottaison décorative des stations s'arrête hors de l'écran */
+    if ('IntersectionObserver' in window) {
+      const loopIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-offscreen', !e.isIntersecting)), { rootMargin: '80px 0px' });
+      $$('.station-figure img').forEach(img => loopIO.observe(img));
+    }
+
+    /* Pointeur fin : produit incliné en 3D, boutons qui suivent à peine le pointeur.
+       Le réglage « réduire les animations » est relu à chaque mouvement, pas seulement au chargement. */
+    if (finePointer) {
       const frame = $('.hero-product-frame');
       if (frame && hero) {
         const rx = gsap.quickTo(frame, 'rotationX', { duration: 0.8, ease: 'power3' });
         const ry = gsap.quickTo(frame, 'rotationY', { duration: 0.8, ease: 'power3' });
         gsap.set(frame, { transformPerspective: 1100, transformOrigin: '50% 50%' });
         hero.addEventListener('pointermove', e => {
+          if (reduced()) { rx(0); ry(0); return; }
           const r = hero.getBoundingClientRect();
           ry(((e.clientX - r.left) / r.width - 0.5) * 10); rx(-((e.clientY - r.top) / r.height - 0.5) * 7);
         }, { passive: true });
         hero.addEventListener('pointerleave', () => { rx(0); ry(0); });
       }
+      /* 5 px au plus, sans rebond : la cible reste sous le pointeur */
+      const PULL = 5;
       $$('.magnetic, .hero-actions .button, .footer-actions .button').forEach(btn => {
-        const mx = gsap.quickTo(btn, 'x', { duration: 0.6, ease: 'elastic.out(1,.6)' });
-        const my = gsap.quickTo(btn, 'y', { duration: 0.6, ease: 'elastic.out(1,.6)' });
+        const mx = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' });
+        const my = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' });
         btn.addEventListener('pointermove', e => {
+          if (reduced()) { mx(0); my(0); return; }
           const r = btn.getBoundingClientRect();
-          mx((e.clientX - (r.left + r.width / 2)) * 0.28); my((e.clientY - (r.top + r.height / 2)) * 0.4);
+          mx(clamp((e.clientX - (r.left + r.width / 2)) * 0.12, -PULL, PULL)); my(clamp((e.clientY - (r.top + r.height / 2)) * 0.18, -PULL, PULL));
         }, { passive: true });
         btn.addEventListener('pointerleave', () => { mx(0); my(0); });
       });

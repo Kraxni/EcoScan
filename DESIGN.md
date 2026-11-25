@@ -36,6 +36,15 @@ Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteu
 - Sans prise en charge de `animation-timeline`, avec « réduire les animations » ou à l'impression, tout reste statique et lisible.
 - Un élément à `overflow: hidden` devient un conteneur de défilement et casse la chronologie : utiliser `overflow: clip` sur les ancêtres d'éléments animés.
 
+### Règles issues de la revue d'animations
+
+- **Fréquence.** Une action qui se répète ne s'anime pas : le rideau entre parcours ne joue qu'après un clic ou un toucher, jamais quand la vue change au clavier. Il dure 0,5 s en tout (`power3.out`).
+- **Durées.** Survol : 200 à 250 ms (0,22 s). Rien au-dessus de 300 ms sur un élément d'interface, sauf feuilles, rideau et révélations au défilement.
+- **Survol.** Tout mouvement au survol est dans `@media (hover:hover)` : sur tactile, un appui ne laisse pas un survol « collé ».
+- **Pointeur.** Les boutons suivent le pointeur de 5 px au plus, sans rebond (`power3.out`) : la cible ne fuit pas sous le doigt. L'inclinaison du produit et ce suivi relisent « réduire les animations » à chaque mouvement.
+- **Manifeste.** Les mots s'éclairent par une chronologie CSS `view()` (comme les titres) : pas de JavaScript pendant le défilement. L'écriture de l'opacité en JavaScript ne reste que comme repli sans `animation-timeline`.
+- **Boucles décoratives.** La flottaison de la station s'arrête hors de l'écran (classe `is-offscreen`) ; la dérive au défilement ne s'arrête jamais (la mettre en pause la ferait sauter au retour).
+
 ## Mise en page horizontale (écrans de 1100 px et plus)
 
 Moins de pile verticale : texte et image côte à côte, en alternant les côtés (promesse, concept, architecture, fonctionnement, technologies, exploitation), film et vue en coupe installés à côté de leurs réglages, cartes en rangée (le panneau sombre de l'architecture et ses deux cartes), l'image de la station reste en vue pendant la lecture des étapes (sticky). En dessous de 1100 px, tout s'empile comme avant.

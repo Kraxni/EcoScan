@@ -110,8 +110,8 @@ main .story-head h2{max-width:18ch;margin-inline:auto}
 
 /* tuiles */
 .grid.three,.promise-grid,.future-grid,.grid.four,.metrics{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));align-items:stretch;gap:clamp(14px,2vw,24px)}
-.grid>article,.promise-grid>article,.future-grid>article{background:var(--tile);border:0;border-radius:var(--r);padding:clamp(24px,2.6vw,36px);color:var(--ink);transition:transform .5s var(--ease)}
-.grid>article:hover,.promise-grid>article:hover{transform:translateY(-4px)}
+.grid>article,.promise-grid>article,.future-grid>article{background:var(--tile);border:0;border-radius:var(--r);padding:clamp(24px,2.6vw,36px);color:var(--ink);transition:transform .22s var(--ease)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.grid>article:hover,.promise-grid>article:hover{transform:translateY(-4px)}}
 .grid>article h3,.future-grid>article h3,.promise-grid>article h3{margin-bottom:.6em;color:var(--ink)}
 .grid>article p,.promise-grid>article p,.future-grid>article p{color:var(--muted);font-size:1rem}
 .metrics strong{display:block;font-weight:700;letter-spacing:-.05em;font-size:clamp(3.4rem,7vw,6rem);line-height:.95;color:var(--leaf);font-variant-numeric:tabular-nums;margin-bottom:.15em}
@@ -215,9 +215,11 @@ html:not(.js) .story-picker,html:not(.js) .story-hint,html:not(.js) .story-progr
 .faq-list summary{font-size:1.2rem;font-weight:600;padding:14px 0;min-height:44px}
 .faq-list details[open]{background:#fff}
 .faq-list details[open] summary{color:var(--leaf-deep)}
-.resource-card{padding:28px;transition:transform .5s var(--ease),background .3s}
+.resource-card{padding:28px;transition:transform .22s var(--ease),background .3s}
+@media(hover:hover){
 .resource-card:hover{transform:translateY(-6px);background:var(--leaf);color:#fff}
 .resource-card:hover h3,.resource-card:hover p,.resource-card:hover span,.resource-card:hover b{color:#fff}
+}
 .back-top{background:var(--leaf);color:#fff;border:0}
 
 /* petits textes hérités : contraste renforcé */
@@ -412,7 +414,7 @@ dialog,.eco-shop-dialog{overscroll-behavior:contain}
 .demo-card select,.station-console select{min-height:48px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:inherit}
 .object-tray{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
 .object-token{display:grid;justify-items:center;gap:6px;padding:14px 6px 10px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:.85rem;min-height:92px;transition:border-color .25s,transform .25s var(--ease)}
-.object-token:hover{border-color:var(--leaf);transform:translateY(-2px)}
+@media(hover:hover){.object-token:hover{border-color:var(--leaf);transform:translateY(-2px)}}
 .object-token[aria-pressed=true]{background:var(--night);color:#fff;border-color:var(--night)}
 @media(max-width:520px){.object-tray{grid-template-columns:repeat(2,1fr)}}
 /* étapes : une frise, pas des pastilles */
@@ -469,6 +471,9 @@ dialog,.eco-shop-dialog{overscroll-behavior:contain}
 @keyframes sd-away{to{opacity:0;translate:0 -44px}}
 @keyframes sd-sink{to{translate:0 90px;opacity:.4}}
 @keyframes sd-word{from{translate:0 112%}to{translate:0 0}}
+@keyframes sd-scrub{from{opacity:.55}to{opacity:1}}
+/* manifeste : chaque mot s'éclaire en montant dans l'écran (CSS pur, plus de JavaScript pendant le défilement) */
+.scrub-css .wi{animation:sd-scrub linear both;animation-timeline:view();animation-range:cover calc(14% + var(--k,0)*.08%) cover calc(44% + var(--k,0)*.08%)}
 /* titres : chaque mot monte avec le défilement, dès que le titre touche le bas de l'écran, avec un léger décalage de mot en mot */
 .split-css .wi{animation:sd-word cubic-bezier(.16,.84,.3,1) both;animation-timeline:view();animation-range:cover calc(8% + var(--k,0)*1.3%) cover calc(27% + var(--k,0)*1.3%)}
 
@@ -479,6 +484,8 @@ dialog,.eco-shop-dialog{overscroll-behavior:contain}
 /* la station monte et grandit en entrant, puis dérive lentement pendant le défilement */
 .station-figure{animation:sd-figure linear both;animation-timeline:view();animation-range:entry 0% entry 80%}
 .station-figure img{animation:sd-drift linear both,sd-float 7s ease-in-out infinite alternate;animation-timeline:view(),auto;animation-range:cover 0% cover 100%,normal}
+/* la flottaison (2e animation de la liste) s'arrête hors de l'écran ; la dérive au défilement (1re) ne s'arrête jamais */
+.station-figure img.is-offscreen{animation-play-state:running,paused}
 
 /* cartes, lignes et étapes : montée décalée, une chaîne par rangée */
 .grid>article,.future-grid>article,.architecture-chain>article,.roadmap>li,.promise-grid>article,.readiness-grid>*,.resource-grid>*,.faq-list>details{animation:sd-rise linear both;animation-timeline:view();animation-range:entry calc(var(--i,0)*8%) entry calc(52% + var(--i,0)*8%)}
