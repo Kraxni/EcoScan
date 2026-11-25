@@ -144,6 +144,7 @@ node tests/workspace.cjs
 node tests/shop.cjs
 node tests/ergonomics.cjs
 node tests/premium.cjs
+node tests/taste.cjs
 node tests/app.cjs
 node tests/server.cjs
 node tests/live.cjs

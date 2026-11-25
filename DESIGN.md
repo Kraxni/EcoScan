@@ -23,18 +23,47 @@ Pile système : **SF Pro** sur Apple, **Inter** (hébergée dans `assets/fonts/`
 1. Un seul fond. Pas d'alternance clair/sombre entre sections.
 2. Titres et chapôs centrés ; une idée par écran.
 3. Un bouton primaire vert, un lien secondaire avec chevron.
-4. Le mouvement explique (trajet d'un objet, défilement fluide), il ne décore pas.
+4. Le mouvement donne au site un air d'innovation et explique avant de décorer (trajet d'un objet, défilement fluide), mais il reste fluide : compositeur seul et sous le plancher de performance (voir « Mouvement au défilement »).
+   <!-- 2026-11-25: « maybe a little more animations and scrolling effects so it looks more innovative » ; remplace « le mouvement explique, il ne décore pas », qui contredisait cette demande -->
 5. Aucun résultat, partenariat ou équipement présenté comme réel : projet académique, concept.
+
+## Surfaces
+
+- **Les rendus de la station et les photos produit s'affichent entiers, sur le fond de page, dans leur rapport naturel. Jamais de `object-fit: cover` qui les recadre en tuile.**
+  Pourquoi : tu n'aimes pas les images recadrées (préférence, sans autre raison donnée).
+  Contrôle : `node tests/taste.cjs` (rapport affiché ≠ rapport natif de plus de 2 %, sur `main img` à 1440 et 390 px).
+  <!-- 2026-11-25: « i am not a big fan of the cropped pictures like this maybe change that and there is some awkward empty spaces » -->
+- **Les visuels de la station sont les rendus Blender/Cycles du modèle d'origine (`assets/econova-compact-*.webp`, `assets/ecoscan-*-studio.webp`, film v3 ; sources : `tools/render_compact_model.py`, `tools/build_station_stills.py`, `tools/film_v3/`). Ne jamais les redessiner en SVG/CSS ni les remplacer par un modèle simplifié ; un nouveau rendu garde l'allure de l'ancien.**
+  Pourquoi : *inféré, à confirmer* : le rendu d'avant paraissait plus réaliste et plus premium. Tu as seulement dit « plus beau ».
+  <!-- 2026-11-25: « le modele d'avant estait plus beau je veux qu'il resemble au photo 3d … celle en 3d de avan » -->
+
+## Copy
+
+- **Une refonte visuelle ne réécrit ni les explications, ni les sous-titres, ni la voix du film.**
+  Pourquoi : *inféré, à confirmer* : le texte et la voix étaient déjà validés ; la plainte était visuelle.
+  <!-- 2026-11-25: « okay les expliction et la voie il ne faut pas la chaneger » -->
+
 
 ## Mouvement au défilement
 
 Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteur de défilement ni JavaScript : seulement `transform`, `translate`, `scale` et `opacity`, exécutés hors du fil principal.
 
 - La station (rendu 3D détouré) monte et grandit en entrant, puis dérive lentement ; une très légère flottaison l'anime au repos.
-- Les cartes, lignes et étapes montent une à une (décalage par rangée) ; chaque entrée de la liste de la promesse trace sa ligne de gauche à droite.
-- L'entrée de page s'estompe quand on la quitte ; les mots des titres montent à l'arrivée du titre (GSAP, découpage fait juste avant l'affichage).
+- Les cartes et les étapes montent une à une à leur entrée (`editorial-entrance`, 0,65 s, décalage par rangée), déclenchées une seule fois par un `IntersectionObserver` : ce n'est pas une chronologie de défilement. Chaque entrée de la liste de la promesse trace sa ligne de gauche à droite.
+- L'entrée de page s'estompe quand on la quitte ; les mots des titres montent sur une chronologie CSS `view()` (voir la règle ci-dessous ; JavaScript ne fait que découper les mots et poser `--k`).
 - Sans prise en charge de `animation-timeline`, avec « réduire les animations » ou à l'impression, tout reste statique et lisible.
 - Un élément à `overflow: hidden` devient un conteneur de défilement et casse la chronologie : utiliser `overflow: clip` sur les ancêtres d'éléments animés.
+
+### Règles issues de tes corrections
+
+- **Les mots des titres se révèlent de `cover 8%` à `cover 27%` sur la chronologie `view()`, avec +1,3 % par mot (`.split-css .wi`). Ne règle que dans cette fenêtre.**
+  Pourquoi : trop tard, le titre est déjà au milieu de l'écran quand il s'écrit et l'effet n'est pas fluide ; trop tôt, on ne le voit plus arriver. Cette fenêtre est l'endroit où tu as atterri après deux ajustements. Elle ne vaut que pour les titres : le manifeste (14 % → 44 %) est un réglage de l'agent.
+  Contrôle : `node tests/taste.cjs` (`animation-range` calculé des mots 0 et 3).
+  <!-- 2026-11-25: « les textes … apparaissent trop tard avec le scroll, je suis déjà au milieu bas de la page » puis « c vrm juste un tout petit peu trop tôt » -->
+- **Tout effet de défilement reste sur le compositeur (`transform`, `translate`, `scale`, `opacity`). Un ajout de mouvement ne fait jamais passer le score Lighthouse mobile sous 95.**
+  Pourquoi : un site qui saute n'est pas premium ; tu veux plus d'animations seulement si elles restent fluides.
+  Plancher : 95 est la recommandation de l'agent, à confirmer. `node tools/perf_floor.cjs` mesure 88 le 2026-11-25, sur un serveur local sans compression : la mesure de référence reste à établir avant de traiter 95 comme acquis.
+  <!-- 2026-11-25: « il lag un peut et que animation de scroll sont muavaises », « cet a dire sauter », « pk le score de performance baisse », « fait pas non plus un site trop lourd prsq la il est vrm pas fluide » -->
 
 ### Règles issues de la revue d'animations
 
@@ -46,6 +75,10 @@ Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteu
 - **Boucles décoratives.** La flottaison de la station s'arrête hors de l'écran (classe `is-offscreen`) ; la dérive au défilement ne s'arrête jamais (la mettre en pause la ferait sauter au retour).
 
 ## Mise en page horizontale (écrans de 1100 px et plus)
+
+- **Dès 1100 px, texte et visuel se placent côte à côte ; aucune bande vide. Au-dessous, tout s'empile. Utiliser mieux la place sans surcharger : une idée par écran.**
+  Pourquoi : « weird spaces with nothing » ; le site était trop vertical.
+  <!-- 2026-11-25: « it is a bit to vertical … make the webiste more horizontal and less vertival », « use the place better without overwhelming the userts » -->
 
 Moins de pile verticale : texte et image côte à côte, en alternant les côtés (promesse, concept, architecture, fonctionnement, technologies, exploitation), film et vue en coupe installés à côté de leurs réglages, cartes en rangée (le panneau sombre de l'architecture et ses deux cartes), l'image de la station reste en vue pendant la lecture des étapes (sticky). En dessous de 1100 px, tout s'empile comme avant.
 
