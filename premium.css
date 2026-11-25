@@ -274,7 +274,8 @@ footer{background:transparent;color:var(--ink);padding:clamp(80px,11vw,160px) va
   .story-picker svg{width:11px;height:18px}
   .story-note,.story-hint{display:none}
   .story-progress{margin-top:8px}
-  .roadmap li{padding-left:3.4rem}
+  .roadmap li{padding-left:4.4rem}
+  .roadmap li::before{left:22px;font-size:1.75rem}
 }
 @media(max-width:700px){
   header{padding:0 14px}

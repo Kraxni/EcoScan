@@ -1,6 +1,6 @@
 # EcoScan — Un seul geste. Un nouveau cycle.
 
-Projet académique indépendant porté par **Albin Krasniqi**, dans le cadre d’une campagne non lucrative pour réduire le gaspillage des ressources. EcoScan est le projet ; **ÉcoNova** désigne le concept de station ECO-001 : une ouverture commune, un tri interne envisagé et un portefeuille de points.
+Projet académique indépendant porté par **Albin Krasniqi** et **Agon Krasniqi**, dans le cadre d’une campagne non lucrative pour réduire le gaspillage des ressources. EcoScan est le projet ; **ÉcoNova** désigne le concept de station ECO-001 : une ouverture commune, un tri interne envisagé et un portefeuille de points.
 
 Site public : https://trueballknower.github.io/EcoScan/
 
