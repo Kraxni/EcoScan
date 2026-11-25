@@ -13,7 +13,7 @@ from urllib.parse import urlsplit, urlunsplit
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-GITHUB_URL = 'https://trueballknower.github.io/EcoScan/'
+GITHUB_URL = 'https://kraxni.github.io/EcoScan/'
 MARKER = '.ecoscan-generated'
 WEB_FILES = ('index.html', 'styles.css', 'product.css', 'script.js', 'product.js',
              'experience-navigation.css', 'experience-navigation.js',

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://trueballknower.github.io/EcoScan/sitemap.xml
+Sitemap: https://kraxni.github.io/EcoScan/sitemap.xml

@@ -36,8 +36,8 @@ const balance=page=>page.locator('#points').textContent();
       assert.ok(asset.width>600&&asset.height>600,`packshot dimensions ${asset.width}×${asset.height}`);
       assert.equal(new URL(asset.current).origin,new URL(page.url()).origin,'packshot comes from the same site');
       assert.match(new URL(asset.current).pathname,/\/assets\/[^/]+\.(?:webp|png|jpe?g)$/i);
-      const published=new URL(asset.source,'https://trueballknower.github.io/EcoScan/');
-      assert.equal(published.protocol,'https:');assert.equal(published.origin,'https://trueballknower.github.io');assert.ok(published.pathname.startsWith('/EcoScan/assets/'));
+      const published=new URL(asset.source,'https://kraxni.github.io/EcoScan/');
+      assert.equal(published.protocol,'https:');assert.equal(published.origin,'https://kraxni.github.io');assert.ok(published.pathname.startsWith('/EcoScan/assets/'));
     }
     await page.click('[data-shop-filter="daily"]');assert.equal(await page.locator('[data-shop-product]:visible').count(),1);assert.equal(await page.locator('[data-shop-product="loop-notebook"]').isVisible(),true);
     await page.click('[data-shop-filter="reuse"]');

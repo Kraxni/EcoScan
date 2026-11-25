@@ -8,7 +8,7 @@ Le projet reste EcoScan. L’adresse peut changer sans renommer le compte GitHub
 
 1. Se connecter ou créer un compte gratuit sur https://dash.cloudflare.com/.
 2. Ouvrir **Workers & Pages**, créer une application **Pages**, puis choisir la connexion à un dépôt Git.
-3. Connecter GitHub et autoriser le dépôt **TrueBallKnower/EcoScan**. Sélectionner ce dépôt.
+3. Connecter GitHub et autoriser le dépôt **Kraxni/EcoScan**. Sélectionner ce dépôt.
 4. Choisir le nom de projet **ecosac** et la branche de production **main**. Utiliser les paramètres ci-dessous.
 5. Lancer le déploiement, puis ouvrir l’adresse HTTPS que Cloudflare affiche après son succès.
 

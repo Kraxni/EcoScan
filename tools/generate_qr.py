@@ -6,7 +6,7 @@ import argparse
 from html import escape
 import qrcode
 import qrcode.image.svg
-URL = 'https://trueballknower.github.io/EcoScan/?station=ECO-001#demo'
+URL = 'https://kraxni.github.io/EcoScan/?station=ECO-001#demo'
 def generate(url, destination):
     qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_Q, box_size=10, border=4)
     qr.add_data(url)

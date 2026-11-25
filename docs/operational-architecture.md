@@ -36,7 +36,7 @@ La station **interroge** le serveur : elle n'a pas besoin d'adresse publique ni 
 
 ## Le QR code collé sur la station
 
-Contenu : `https://trueballknower.github.io/EcoScan/app/?s=ECO-001` (adresse de l'app + identifiant de la station). Deux usages :
+Contenu : `https://kraxni.github.io/EcoScan/app/?s=ECO-001` (adresse de l'app + identifiant de la station). Deux usages :
 - avec l'appareil photo du téléphone : l'app s'ouvre et la session démarre toute seule ;
 - avec le bouton « Scanner avec la caméra » de l'app : lecture dans l'app (`BarcodeDetector` si le navigateur l'a, sinon `jsQR`, chargé à la demande).
 

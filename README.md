@@ -2,7 +2,7 @@
 
 Projet académique indépendant porté par **Albin Krasniqi** et **Agon Krasniqi**, dans le cadre d’une campagne non lucrative pour réduire le gaspillage des ressources. EcoScan est le projet ; **ÉcoNova** désigne le concept de station ECO-001 : une ouverture commune, un tri interne envisagé et un portefeuille de points.
 
-Site public : https://trueballknower.github.io/EcoScan/
+Site public : https://kraxni.github.io/EcoScan/
 
 Une adresse gratuite sans le nom du compte GitHub peut être créée sur Cloudflare Pages : **ecosac.pages.dev** est le nom proposé, sous réserve de disponibilité. La configuration et les quelques clics nécessaires sont dans [HEBERGEMENT_CLOUDFLARE.md](docs/HEBERGEMENT_CLOUDFLARE.md). Cette nouvelle adresse n’est pas encore créée ; le site ci-dessus reste l’adresse active.
 
@@ -42,7 +42,7 @@ Pour remplacer un texte, modifiez `index.html`. Pour ajouter une image, utilisez
 
 ## Publication gratuite et mises à jour
 
-Le dépôt existe : https://github.com/TrueBallKnower/EcoScan
+Le dépôt existe : https://github.com/Kraxni/EcoScan
 
 Dans **Settings → Pages**, sélectionner **Deploy from a branch → main → /(root) → Save**. Aucun workflow personnalisé, dossier `dist/` ou compilation n’est nécessaire. Conserver `.nojekyll` à la racine.
 
@@ -108,7 +108,7 @@ L’identité originale est dans `logo-ecoscan.svg`, `logo-ecoscan-light.svg`, `
 
 La première image large `econova-studio.webp` apparaît seulement dans « Explorer l’étude grand format » : une variante exploratoire distincte, sans dimensions ni débit validés.
 
-Le QR **réellement scannable** est `ecoscan-station-qr.svg`. Il ouvre `https://trueballknower.github.io/EcoScan/?station=ECO-001#demo`, puis demande une confirmation fictive. Il ne transfère aucun point entre appareils et ne prouve aucune présence ou dépôt. Pour changer l’URL, modifier `tools/generate_qr.py` et régénérer le SVG avec le paquet Python optionnel `qrcode==8.2`.
+Le QR **réellement scannable** est `ecoscan-station-qr.svg`. Il ouvre `https://kraxni.github.io/EcoScan/?station=ECO-001#demo`, puis demande une confirmation fictive. Il ne transfère aucun point entre appareils et ne prouve aucune présence ou dépôt. Pour changer l’URL, modifier `tools/generate_qr.py` et régénérer le SVG avec le paquet Python optionnel `qrcode==8.2`.
 
 Le film principal est `econova-film-v2-en.mp4` : **92 secondes**, 720p, H.264/AAC, avec narration anglaise (Kokoro / Heart) et sous-titres français. `econova-film-v2.mp4` est la version française corrigée (SIWIS). Les chapitres sont racontés d’un bloc, à vitesse naturelle, et parlent de bouteilles en plastique sans épellation de PET. Les deux films possèdent le même flux d’images ; seule la voix change. La musique originale baisse pendant les explications. Les plaques latérales, la trappe centrale, le volet de contrôle et leurs actionneurs bougent avant le passage des objets ; cette mise en scène n’est pas une validation mécanique. Les chapitres sont dans `econova-film-v2-chapters.json`, les captions dans `econova-film-v2-fr.vtt` et les transcriptions dans `docs/VIDEO_V2_TRANSCRIPTION.md` et `docs/VIDEO_V2_EN_TRANSCRIPTION.md`. Le sélecteur English / Français conserve la position et l’état de lecture. La version anglaise possède `econova-film-v2-en.vtt` et sa traduction `econova-film-v2-en-fr.vtt`. La vidéo ne démarre pas automatiquement ; `preload="none"` évite de charger le film tant que le visiteur n’interagit pas. Choisir un chapitre autorise son chargement, sans lecture automatique.
 
@@ -169,7 +169,7 @@ Six vues 3D entières, détourées, avec ombre douce intégrée : `FILM_SET=stil
 
 ## Application mobile (`app/`)
 
-Version installable (PWA) de l'app envisagée, servie par le même hébergement gratuit : <https://trueballknower.github.io/EcoScan/app/>. Sur iPhone : Partager, puis « Sur l'écran d'accueil » ; sur Android, bouton « Installer ». Elle fonctionne aussi sans connexion (service worker `app/sw.js`).
+Version installable (PWA) de l'app envisagée, servie par le même hébergement gratuit : <https://kraxni.github.io/EcoScan/app/>. Sur iPhone : Partager, puis « Sur l'écran d'accueil » ; sur Android, bouton « Installer ». Elle fonctionne aussi sans connexion (service worker `app/sw.js`).
 
 Tout est simulé, comme sur le site : pas de caméra (le scan est une illustration), pas de compte, pas de serveur, aucun point réel. Écrans : Accueil, Station (scanner, session, dépôt, résultat), Portefeuille, Boutique (trois concepts, échanges fictifs), Apprendre (quiz). Règles identiques à la démonstration du site : 10 points par objet reconnu, 30 pour un mélange, rien si le doute persiste, dépôt bloqué si un compartiment simulé est plein. Le solde est enregistré sous la même clé (`ecoscan-demo-points`) que le site, donc partagé sur le même appareil.
 
