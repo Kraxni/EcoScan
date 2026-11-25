@@ -9,7 +9,7 @@ const base=process.env.ECOSCAN_TEST_URL || 'http://127.0.0.1:8000';
  await page.goto(base,{waitUntil:'networkidle'});await page.waitForTimeout(1800);
  assert.ok(await page.evaluate(()=>document.documentElement.classList.contains('fx')),'fx enabled');
  assert.equal(await page.locator('#hero-canvas').count(),0,'decorative canvas removed');
- assert.equal(await page.locator('img[src*="assets/illustrations/"]').count(),4,'four optimised illustrations');
+ assert.equal(await page.locator('img[src*="assets/illustrations/"]').count(),3,'three optimised illustrations');
  assert.ok(await page.locator('.hero-product-frame img').evaluate(e=>getComputedStyle(e).opacity==='1'),'LCP image never hidden');
  assert.ok(await page.locator('.h1-line>span').first().evaluate(e=>getComputedStyle(e).opacity==='1'));
  assert.equal(await page.locator('#accueil h1').getAttribute('aria-label'),'Un seul geste. Un nouveau cycle.');

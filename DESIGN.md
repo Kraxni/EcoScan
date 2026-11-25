@@ -18,6 +18,17 @@
 
 Pile système : **SF Pro** sur Apple, **Inter** (hébergée dans `assets/fonts/`) ailleurs. Titres en graisse 650–700, interlettrage serré (−0,035 à −0,05 em), corps à 18 px.
 
+- **Aucun texte HTML sous 12 px (`.75rem`)**, étiquettes et légendes comprises. Les étiquettes qui disent « concept », « fictif » ou « non mesuré » sont celles qu'il faut lire le plus facilement.
+  <!-- 2026-11-25: revue du site, acceptée par « fait tout » ; avant, 80 déclarations allaient de 8,8 à 11,5 px -->
+- **Typographie française : espace insécable avant `;` `:` `!` `?` (U+202F avant `; ! ?`, U+00A0 avant `:`) et à l'intérieur des guillemets « ».** Sinon une ligne peut commencer par « ; » sur mobile.
+  <!-- 2026-11-25: idem -->
+- **Tout texte dans une autre langue que le français porte `lang`** (ex. `<h2 lang="en">`), pour que les lecteurs d'écran le prononcent correctement.
+  <!-- 2026-11-25: idem -->
+- **Un chiffre qui n'est pas mesuré porte son statut avant le chiffre** (`.stat-flag` : « Objectif · non mesuré »). La phrase d'explication seule, en petit sous un gros chiffre, ne suffit pas.
+  <!-- 2026-11-25: idem ; prolonge la règle 5 -->
+- **Cibles tactiles de 44 px**, liens de l'en-tête compris sur écran tactile (`@media(pointer:coarse)`).
+  <!-- 2026-11-25: idem -->
+
 ## Règles
 
 1. Un seul fond. Pas d'alternance clair/sombre entre sections.

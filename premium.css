@@ -166,13 +166,13 @@ html.js .story-steps small{max-height:0;opacity:0;overflow:hidden;transition:opa
 html.js .story-steps li.is-active small,html.js .story-pin.is-static .story-steps small{max-height:9em;opacity:1;margin-top:.5rem}
 .story-visual{position:relative;background:var(--night);border-radius:28px;padding:clamp(14px,2vw,26px)}
 .story-visual svg{display:block;width:100%;height:auto;max-height:calc(100svh - 230px);margin-inline:auto}
-.sg-label{font-size:10px;font-weight:600;letter-spacing:.08em}
+.sg-label{font-size:.75rem;font-weight:600;letter-spacing:.08em}
 .sg-tagtext{font-size:17px}
 .sg-points{font-size:44px;font-weight:650}
 .sg-toast{font-size:12px;font-weight:600;letter-spacing:.04em}
 .story-progress{height:2px;margin-top:14px;border-radius:2px;overflow:hidden;background:rgba(255,255,255,.2)}
 .story-progress i{display:block;height:100%;background:var(--signal);transform-origin:left;transform:scaleX(0)}
-.story-hint{margin:12px 0 0;max-width:none;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(243,247,240,.7)}
+.story-hint{margin:12px 0 0;max-width:none;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(243,247,240,.7)}
 .hint-click{display:none}
 .story-note{margin-top:2rem}
 html:not(.js) .story-picker,html:not(.js) .story-hint,html:not(.js) .story-progress{display:none}
@@ -284,7 +284,7 @@ footer{background:transparent;color:var(--ink);padding:clamp(80px,11vw,160px) va
   .hide-sm,.live-dot{display:none}
   .product-hero{padding-top:calc(var(--header-h) + 28px)}
   .product-hero h1{font-size:clamp(2.5rem,12.5vw,4rem)}
-  .product-hero .eyebrow{font-size:.72rem}
+  .product-hero .eyebrow{font-size:.75rem}
   .product-hero .hero-description{font-size:1.1rem}
     .footer-base{flex-direction:column;align-items:flex-start}
 }
@@ -583,3 +583,15 @@ main .station-section>.lead{grid-column:1;grid-row:2;text-align:left;margin:0 0 
 /* atelier de dimensionnement : le résultat remplit sa colonne */
 .feasibility-lab .capacity-result{align-self:stretch;display:flex;flex-direction:column;justify-content:center}
 }
+
+/* Statistiques de Mission : le statut se lit avant le chiffre (rien n'est mesuré). */
+.metrics .stat-flag{display:inline-block;margin:0 0 12px;padding:4px 12px;border:1px dashed #456252;border-radius:999px;font-size:.75rem;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+/* Icônes des trois gestes (remplacent trois glyphes de 12 px). */
+.grid>article>.symbol{display:grid;place-items:center;width:44px;height:44px;margin:0 0 14px;padding:0;border-radius:50%;background:#e6f0df;color:var(--leaf-deep);letter-spacing:0}
+/* Trois objets à garder, entiers, dans leur rapport naturel (jamais recadrés). */
+.section-packshots{max-width:760px}
+.packshot-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2vw,20px)}
+.packshot-row img{display:block;width:100%;height:auto;aspect-ratio:1/1;border-radius:var(--r);background:#f3f1ea}
+
+/* Écrans tactiles (tablettes comprises) : les liens de l'en-tête font 44 px de haut, comme le reste des commandes. */
+@media(pointer:coarse){header nav a,header .button,.header-cta{align-items:center;min-height:44px}header nav a,header .button{display:inline-flex}}

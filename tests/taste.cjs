@@ -36,7 +36,27 @@ const base=process.env.ECOSCAN_TEST_URL||'http://127.0.0.1:8000';
  assert.deepEqual(rows[1],['cover 11.9%','cover 30.9%','view()'],'décalage de 1,3 % par mot');
  await page.close();
 
+ /* Typographie : aucun texte HTML sous 12 px, sur les 5 parcours, à 390 px (DESIGN.md › Typographie).
+    Le texte des illustrations SVG est exclu : sa taille réelle dépend de l'échelle du dessin. */
+ const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+ const m=await mobile.newPage();m.on('pageerror',e=>errors.push(e.message));
+ let tiny=[];
+ for(const hash of ['#accueil','#demo','#faisabilite','#mission','#ressources']){
+  await m.goto(base+'/index.html'+hash,{waitUntil:'networkidle'});await m.waitForTimeout(400);
+  tiny=tiny.concat(await m.evaluate(()=>[...document.querySelectorAll('main *, footer *')]
+   .filter(e=>!(e instanceof SVGElement)&&!e.closest('svg,.sr-only,[hidden]')&&e.getBoundingClientRect().width>0&&[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim().length>1)&&parseFloat(getComputedStyle(e).fontSize)<12)
+   .map(e=>e.tagName+'.'+(e.className||'')+' '+parseFloat(getComputedStyle(e).fontSize)+'px « '+e.textContent.trim().slice(0,30)+' »')));
+ }
+ assert.deepEqual(tiny,[],'textes sous 12 px : '+tiny.slice(0,5).join(' | '));
+ await mobile.close();
+
+ /* Typographie française : pas d'espace simple avant ; : ! ? dans le texte visible (DESIGN.md › Typographie). */
+ const html=require('node:fs').readFileSync(require('node:path').join(__dirname,'..','index.html'),'utf8');
+ const text=html.slice(html.indexOf('<body')).replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/g,'').replace(/<[^>]+>/g,'\u0000');
+ const plain=text.split('\u0000').flatMap(t=>[...t.matchAll(/(?<=\S) ([;:!?])(?=\s|$)/g)].map(x=>t.slice(Math.max(0,x.index-20),x.index+3)));
+ assert.deepEqual(plain,[],'espaces simples avant ponctuation haute : '+plain.slice(0,4).join(' | '));
+
  assert.deepEqual(errors,[],'erreurs de page : '+errors.join(' | '));
- console.log('PASS taste: 0 image recadrée à 1440 et 390 px, fenêtre de révélation des titres cover 8 % → 27 % (+1,3 % par mot)');
+ console.log('PASS taste: 0 image recadrée à 1440 et 390 px, fenêtre de révélation des titres cover 8 % → 27 % (+1,3 % par mot), aucun texte sous 12 px, typographie française insécable');
  await browser.close();
 })().catch(e=>{console.error(e);process.exit(1);});
