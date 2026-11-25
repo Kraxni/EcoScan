@@ -71,7 +71,7 @@
       <button class="btn secondary" type="button" id="scan-manual" aria-expanded="false" aria-controls="manual">Saisir l’identifiant ECO-001</button>
       <form id="manual" hidden novalidate>
         <label for="station-id">Identifiant de la station</label>
-        <input id="station-id" name="station" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ECO-001" maxlength="12">
+        <input id="station-id" name="station" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" enterkeyhint="go" spellcheck="false" placeholder="ECO-001" maxlength="12">
         <button class="btn primary" type="submit">Ouvrir la session</button>
         <p class="small" id="manual-status" role="status"></p>
       </form>
@@ -192,7 +192,7 @@
     <h2 id="api-title">Connexion à un serveur EcoScan</h2>
     <p class="small">Pour utiliser l’app avec une vraie station, saisissez l’adresse du serveur EcoScan qui la gère. Elle doit commencer par https:// (ou http://localhost pour les essais). Laissez le champ vide pour revenir à la démonstration.</p>
     <label for="api-url">Adresse du serveur</label>
-    <input id="api-url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://…">
+    <input id="api-url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" autocorrect="off" enterkeyhint="go" spellcheck="false" placeholder="https://…">
     <p class="small" id="api-status" role="status"></p>
     <div class="dialog-actions">
       <button class="btn primary" type="button" id="api-save">Tester et enregistrer</button>

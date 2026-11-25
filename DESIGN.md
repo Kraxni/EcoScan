@@ -53,3 +53,9 @@ Moins de pile verticale : texte et image côte à côte, en alternant les côté
 
 Même système visuel que le site (fond vert, panneaux sombres pour le solde, vert d'action, Inter), pensé pour le pouce : barre d'onglets en bas, cibles de 44 px, un écran par idée, zones sûres de l'iPhone respectées. Chaque écran dit ce qui est simulé ; aucun point n'est réel. Le mouvement est discret et disparaît avec « réduire les animations ».
 
+Toucher (le flash gris du navigateur est supprimé, donc chaque commande répond à l'appui) :
+- Toute commande a un état `:active` en 120 ms : `scale(.97)` pour onglets, puces, tuiles et réponses, opacité pour les liens.
+- Le texte des commandes n'est pas sélectionnable à l'appui long (`user-select: none` sur `button`, `.tile`, `.chip`, `.link`) ; le contenu l'est.
+- Tout survol est dans `@media (hover:hover) and (pointer:fine)`. `overscroll-behavior: none` sur `html`, `contain` sur la boîte de dialogue et la liste de filtres.
+- Champs : 16 px, `enterkeyhint="go"`, `autocorrect="off"`. Pas de `interactive-widget=resizes-content` : la barre d'onglets fixe remonterait au-dessus du clavier. Un seul `theme-color` : l'app n'a pas de mode sombre.
+

@@ -7,7 +7,7 @@
   --sans:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",sans-serif
 }
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none}
 body{margin:0;min-height:100svh;background:var(--page);color:var(--ink);font:400 1rem/1.4 var(--sans);-webkit-font-smoothing:antialiased;overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 button,input{font:inherit;color:inherit}
 h1,h2,h3,p,ul,ol,dl,dd,fieldset{margin:0;padding:0}
@@ -52,11 +52,11 @@ h2{font-size:1.0625rem;line-height:1.3;font-weight:650;letter-spacing:-.01em}
 .btn.secondary{background:var(--surface);color:var(--leaf-deep);box-shadow:inset 0 0 0 1.5px var(--leaf-deep)}
 .btn:active{transform:scale(.975)}
 .btn[disabled]{opacity:.5;cursor:default;transform:none}
-@media(hover:hover){.btn.primary:hover{background:var(--leaf-deep)}.btn.secondary:hover{background:var(--page-soft)}}
+@media(hover:hover) and (pointer:fine){.btn.primary:hover{background:var(--leaf-deep)}.btn.secondary:hover{background:var(--page-soft)}}
 .link{align-self:flex-start;padding:10px 0;border:0;background:none;color:var(--leaf-deep);font-weight:650;font-size:.875rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px}
 .chip{min-height:44px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:.875rem;font-weight:500;cursor:pointer;white-space:nowrap}
 .chip[aria-pressed=true]{background:var(--leaf);border-color:var(--leaf);color:#fff}
-.filters{display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
+.filters{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;margin:0 -20px;padding:0 20px 2px;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
 
 .tip{display:flex;gap:12px;align-items:flex-start;padding:16px;border-radius:20px;background:var(--page-soft);border:1px solid var(--line);font-size:.875rem;font-weight:500}
@@ -89,7 +89,7 @@ h2{font-size:1.0625rem;line-height:1.3;font-weight:650;letter-spacing:-.01em}
 .objects legend{grid-column:1/-1;padding:0 0 6px;font-size:1.0625rem;font-weight:650}
 .tile{position:relative;display:block}
 .tile input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
-.tile-box{display:flex;flex-direction:column;gap:2px;min-height:64px;padding:12px 14px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .2s,background-color .2s}
+.tile-box{display:flex;flex-direction:column;gap:2px;min-height:64px;padding:12px 14px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .2s,background-color .2s,transform .12s var(--ease)}
 .tile-box b{font-size:.9375rem;font-weight:650}
 .tile-box small{font-size:.75rem;font-weight:500;color:var(--muted)}
 .tile-box small.warn{color:var(--amber)}
@@ -145,7 +145,7 @@ h2{font-size:1.0625rem;line-height:1.3;font-weight:650;letter-spacing:-.01em}
 .quiz{display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px}
 .qtext{font-size:1.25rem;line-height:1.3;font-weight:650;letter-spacing:-.015em}
 .answers{display:flex;flex-direction:column;gap:10px}
-.answer{width:100%;min-height:52px;padding:14px 16px;text-align:left;border:0;border-radius:16px;background:var(--page-soft);box-shadow:inset 0 0 0 1px var(--line);font-size:1rem;font-weight:500;cursor:pointer;transition:background-color .2s,box-shadow .2s}
+.answer{width:100%;min-height:52px;padding:14px 16px;text-align:left;border:0;border-radius:16px;background:var(--page-soft);box-shadow:inset 0 0 0 1px var(--line);font-size:1rem;font-weight:500;cursor:pointer;transition:background-color .2s,box-shadow .2s,transform .12s var(--ease)}
 .answer.correct{background:#d8eddd;box-shadow:inset 0 0 0 2px var(--leaf)}
 .answer.wrong{background:var(--amber-soft);box-shadow:inset 0 0 0 2px var(--amber)}
 .answer[disabled]{cursor:default}
@@ -167,6 +167,14 @@ dialog h2{font-size:1.375rem}
 dialog dt{font-size:.75rem;font-weight:650;text-transform:uppercase;letter-spacing:.05em;color:var(--leaf-deep);margin-top:8px}
 dialog dd{font-size:.9375rem;color:var(--muted)}
 .dialog-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+
+/* Toucher : le flash gris du navigateur est supprimé, donc chaque commande répond dès que le doigt se pose */
+.chip,.tabbar button{transition:transform .12s var(--ease)}
+.link{transition:opacity .12s var(--ease)}
+.chip:active,.tabbar button:active,.answer:not([disabled]):active,.tile:active .tile-box{transform:scale(.97)}
+.link:active{opacity:.55}
+/* un appui long ne sélectionne pas le texte d'une commande ; le contenu reste sélectionnable */
+button,.tile,.chip,.link{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 
 /* Mouvement : discret, jamais obligatoire */
 @media(prefers-reduced-motion:no-preference){
