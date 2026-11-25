@@ -8,6 +8,11 @@ Before building or changing UI, read DESIGN.md.
   Pourquoi : « je ne veux absolument rien payer ».
   <!-- 2026-11-25: « je ne veux aboslument rien payer » -->
 
+- **Fais les modifications directement sur GitHub et envoie le lien du site avec toutes les modifications faites.**
+  Pourquoi : il veut voir le site publié avec chaque changement, sans copier de fichiers.
+  <!-- 2026-11-25: « j'ai envie que tu fasse toute les modif sur le github directement et que tu m'envoie le lien du site avec toutes les modification faites » ; le pourquoi est inféré -->
+  *(pourquoi inféré, à confirmer)*
+
 ## Avant de livrer un changement d'interface
 
 Avec le serveur local actif (`python3 tools/serve_local.py --port 8000`) :

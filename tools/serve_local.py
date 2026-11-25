@@ -1,11 +1,26 @@
-"""Local static server with single byte-range support for native MP4 chapter tests.
+"""Local static server with single byte-range support for native MP4 chapter tests,
+and gzip for text files (HTML, CSS, JS, SVG…) so local measurements match GitHub Pages.
 Standard library only; never used by GitHub Pages production.
 """
 import argparse
 import functools
+import gzip
 import http.server
+import io
 import os
 import re
+
+TEXT_SUFFIXES = {'.html', '.css', '.js', '.mjs', '.svg', '.json', '.vtt', '.xml', '.txt', '.webmanifest'}
+_gzip_cache = {}
+
+def gzipped(path):
+    """Contenu compressé du fichier, mis en cache tant que le fichier ne change pas (comme GitHub Pages)."""
+    stat = os.stat(path)
+    key = (path, stat.st_mtime_ns, stat.st_size)
+    if key not in _gzip_cache:
+        with open(path, 'rb') as source:
+            _gzip_cache[key] = gzip.compress(source.read(), compresslevel=6, mtime=0)
+    return _gzip_cache[key]
 
 class RangeHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -15,6 +30,20 @@ class RangeHandler(http.server.SimpleHTTPRequestHandler):
     def send_head(self):
         self._remaining = None
         header = self.headers.get('Range')
+        path = self.translate_path(self.path)
+        if os.path.isdir(path) and self.path.split('?')[0].endswith('/'):
+            path = os.path.join(path, 'index.html')
+        if (not header and os.path.isfile(path) and os.path.splitext(path)[1].lower() in TEXT_SUFFIXES
+                and 'gzip' in self.headers.get('Accept-Encoding', '')):
+            body = gzipped(path)
+            self.send_response(200)
+            self.send_header('Content-Type', self.guess_type(path))
+            self.send_header('Content-Encoding', 'gzip')
+            self.send_header('Vary', 'Accept-Encoding')
+            self.send_header('Content-Length', str(len(body)))
+            self.send_header('Last-Modified', self.date_time_string(os.stat(path).st_mtime))
+            self.end_headers()
+            return io.BytesIO(body)
         path = self.translate_path(self.path)
         if not header or not os.path.isfile(path):
             return super().send_head()

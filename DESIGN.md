@@ -49,7 +49,7 @@ Pile système : **SF Pro** sur Apple, **Inter** (hébergée dans `assets/fonts/`
 Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteur de défilement ni JavaScript : seulement `transform`, `translate`, `scale` et `opacity`, exécutés hors du fil principal.
 
 - La station (rendu 3D détouré) monte et grandit en entrant, puis dérive lentement ; une très légère flottaison l'anime au repos.
-- Les cartes et les étapes montent une à une à leur entrée (`editorial-entrance`, 0,65 s, décalage par rangée), déclenchées une seule fois par un `IntersectionObserver` : ce n'est pas une chronologie de défilement. Chaque entrée de la liste de la promesse trace sa ligne de gauche à droite.
+- Les cartes et les étapes montent une à une à leur entrée (`editorial-entrance`, 0,65 s, fill `backwards` pour que le survol reprenne la main après l'entrée, décalage par rangée), déclenchées une seule fois par un `IntersectionObserver` : ce n'est pas une chronologie de défilement. Chaque entrée de la liste de la promesse trace sa ligne de gauche à droite.
 - L'entrée de page s'estompe quand on la quitte ; les mots des titres montent sur une chronologie CSS `view()` (voir la règle ci-dessous ; JavaScript ne fait que découper les mots et poser `--k`).
 - Sans prise en charge de `animation-timeline`, avec « réduire les animations » ou à l'impression, tout reste statique et lisible.
 - Un élément à `overflow: hidden` devient un conteneur de défilement et casse la chronologie : utiliser `overflow: clip` sur les ancêtres d'éléments animés.
@@ -62,7 +62,9 @@ Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteu
   <!-- 2026-11-25: « les textes … apparaissent trop tard avec le scroll, je suis déjà au milieu bas de la page » puis « c vrm juste un tout petit peu trop tôt » -->
 - **Tout effet de défilement reste sur le compositeur (`transform`, `translate`, `scale`, `opacity`). Un ajout de mouvement ne fait jamais passer le score Lighthouse mobile sous 95.**
   Pourquoi : un site qui saute n'est pas premium ; tu veux plus d'animations seulement si elles restent fluides.
-  Plancher : 95 est la recommandation de l'agent, à confirmer. `node tools/perf_floor.cjs` mesure 88 le 2026-11-25, sur un serveur local sans compression : la mesure de référence reste à établir avant de traiter 95 comme acquis.
+  Poids : le chargement transfère au plus 256 Ko (233 Ko mesurés le 2026-11-25, + 10 %). Tu as dit « pas trop lourd » sans chiffre : ce budget est la proposition de l'agent.
+  Plancher : 95 est la recommandation de l'agent, à confirmer. Mesure de référence du 2026-11-25 : 97 à 98 (LCP 2,4 s, TBT 43 à 80 ms, CLS 0).
+  Contrôle : `node tools/perf_floor.cjs` (Lighthouse mobile, serveur local). Le serveur `tools/serve_local.py` compresse le texte en gzip comme GitHub Pages ; sans cela le même site tombe à 88.
   <!-- 2026-11-25: « il lag un peut et que animation de scroll sont muavaises », « cet a dire sauter », « pk le score de performance baisse », « fait pas non plus un site trop lourd prsq la il est vrm pas fluide » -->
 
 ### Règles issues de la revue d'animations
