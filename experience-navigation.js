@@ -32,8 +32,10 @@
   function updateBack() {
     if(!back)return;
     const first=sections.find(section=>section.dataset.viewGroup===active);
-    if(first)back.href='#'+first.id;
-    back.hidden=scrollY<Math.max(700,innerHeight*.8);
+    /* N'écrire que ce qui change : sans cela, chaque image de défilement invalide les styles du lien. */
+    if(first&&back.getAttribute('href')!=='#'+first.id)back.href='#'+first.id;
+    const hide=scrollY<Math.max(700,innerHeight*.8);
+    if(back.hidden!==hide)back.hidden=hide;
   }
   function updateGuide() {
     if(!guide)return;

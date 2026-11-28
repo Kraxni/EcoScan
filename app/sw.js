@@ -1,7 +1,7 @@
 'use strict';
 /* Service worker d'EcoScan · Application : l'app s'ouvre et fonctionne sans connexion.
    Stratégie : on précharge le « squelette » de l'app, puis on répond depuis le cache en se remettant à jour en arrière-plan. */
-const VERSION = 'ecoscan-app-v4';
+const VERSION = 'ecoscan-app-v5';
 const SHELL = [
   './', 'index.html', 'app.css', 'app.js', 'data.js', 'live.js', 'scanner.js', 'manifest.webmanifest',
   'img/pochette.webp', 'img/carnet.webp', 'img/sac.webp',

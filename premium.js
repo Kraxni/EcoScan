@@ -63,11 +63,17 @@
   document.addEventListener('ecoscan:viewchange', e => {
     const { group, previous } = e.detail || {};
     if (!group || group === previous || reduced() || keyboardNav) return;
-    $('.curtain-label', curtain).textContent = labels[group] || '';
-    gsap.killTweensOf(curtain);
-    gsap.set(curtain, { display: 'grid', clipPath: 'inset(0% 0% 0% 0%)' });
-    gsap.fromTo('.curtain-label', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: 'power3.out' });
-    gsap.to(curtain, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.34, delay: 0.14, ease: 'power3.out', onComplete: () => gsap.set(curtain, { display: 'none' }) });
+    const label = $('.curtain-label', curtain);
+    label.textContent = labels[group] || '';
+    /* Animation Web (WAAPI) et non GSAP : le changement de vue occupe le fil principal au même instant, et un rideau
+       piloté par requestAnimationFrame y saccade. Ici, le navigateur le joue de son côté. Même courbe (power3.out), même durée. */
+    const out = 'cubic-bezier(.215,.61,.355,1)';
+    curtain.getAnimations().forEach(a => a.cancel());
+    label.getAnimations().forEach(a => a.cancel());
+    curtain.style.display = 'grid';
+    label.animate([{ transform: 'translateY(16px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 250, easing: out, fill: 'both' });
+    curtain.animate([{ clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)' }], { duration: 340, delay: 140, easing: out, fill: 'both' })
+      .onfinish = () => { curtain.style.display = 'none'; };
   });
 
   /* ───────────── Trajet d'un objet : récit épinglé en CSS ───────────── */

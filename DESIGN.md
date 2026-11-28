@@ -86,6 +86,11 @@ Piloté par le navigateur (CSS `animation-timeline: view()`), donc sans écouteu
 - **Pointeur.** Les boutons suivent le pointeur de 5 px au plus, sans rebond (`power3.out`) : la cible ne fuit pas sous le doigt. L'inclinaison du produit et ce suivi relisent « réduire les animations » à chaque mouvement.
 - **Manifeste.** Les mots s'éclairent par une chronologie CSS `view()` (comme les titres) : pas de JavaScript pendant le défilement. L'écriture de l'opacité en JavaScript ne reste que comme repli sans `animation-timeline`.
 - **Boucles décoratives.** La flottaison de la station s'arrête hors de l'écran (classe `is-offscreen`) ; la dérive au défilement ne s'arrête jamais (la mettre en pause la ferait sauter au retour).
+- **Ombre au survol.** Une ombre n'est jamais animée avec `box-shadow` (repeinture à chaque image) : elle vit sur un pseudo-élément dont on anime `opacity` (cartes de la feuille de route, de l'architecture et des perspectives). Toutes les durées de survol du site sont de 0,22 à 0,24 s.
+- **Rideau.** Il est joué par l'API Web Animations, pas par GSAP : le changement de vue occupe le fil principal au même instant, un rideau piloté par `requestAnimationFrame` y saccade. Même courbe (`power3.out`), même durée (0,5 s).
+- **Application.** L'entrée d'un écran dure 0,24 s (onglets touchés souvent) ; les jauges 0,3 s, isolées par `contain: layout paint`.
+  Pourquoi : « rendre toutes les animations plus smooth et moins saccadées » ; le choix de ces trois points est celui de l'agent, d'après une mesure Chromium (processeur ralenti 4×) et la lecture du code, pas un enregistrement sur téléphone.
+  <!-- 2026-11-28: « tu npeux rendre tout les animation plsu smooth et mois sacadé » -->
 
 ## Mise en page horizontale (écrans de 1100 px et plus)
 

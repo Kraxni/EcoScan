@@ -82,8 +82,8 @@ h2{font-size:1.0625rem;line-height:1.3;font-weight:650;letter-spacing:-.01em}
 .bin{display:flex;flex-direction:column;gap:5px}
 .bin b{font-size:.8125rem}
 .bin small{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.gauge{height:8px;border-radius:4px;background:var(--page);overflow:hidden}
-.gauge span{display:block;height:100%;border-radius:4px;background:var(--leaf);transition:width .5s var(--ease)}
+.gauge{height:8px;border-radius:4px;background:var(--page);overflow:hidden;contain:layout paint}
+.gauge span{display:block;height:100%;border-radius:4px;background:var(--leaf);transition:width .3s var(--ease)}
 .bin.full .gauge span{background:var(--amber)}
 .objects{border:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .objects legend{grid-column:1/-1;padding:0 0 6px;font-size:1.0625rem;font-weight:650}
@@ -141,7 +141,7 @@ h2{font-size:1.0625rem;line-height:1.3;font-weight:650;letter-spacing:-.01em}
 .progress{display:flex;flex-direction:column;gap:6px}
 .progress .small{color:var(--leaf-deep)}
 .progress .gauge{height:6px;background:var(--line)}
-.progress .gauge span{transition:width .4s var(--ease)}
+.progress .gauge span{transition:width .3s var(--ease)}
 .quiz{display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:24px}
 .qtext{font-size:1.25rem;line-height:1.3;font-weight:650;letter-spacing:-.015em}
 .answers{display:flex;flex-direction:column;gap:10px}
@@ -178,7 +178,7 @@ button,.tile,.chip,.link{-webkit-user-select:none;user-select:none;-webkit-touch
 
 /* Mouvement : discret, jamais obligatoire */
 @media(prefers-reduced-motion:no-preference){
-  .screen:not([hidden]),[data-view]:not([hidden]){animation:enter .38s var(--ease) both}
+  .screen:not([hidden]),[data-view]:not([hidden]){animation:enter .24s var(--ease) both}
   @keyframes enter{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
   .scanline{animation:sweep 2.6s ease-in-out infinite alternate}
   @keyframes sweep{from{transform:translateY(0)}to{transform:translateY(230px)}}
